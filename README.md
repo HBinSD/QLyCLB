@@ -3,7 +3,7 @@
 ## 1. Thành viên
 - Chu Xuân Minh Đức - 224001782
 - Nguyễn Tùng Dương - 224001781
-
+- Đinh Gia Hưng - 224001798
 - Phạm Thị Hoàng Lan - 224001802
 - Vũ Mai Phương -224001823
 
