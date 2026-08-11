@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông Tin Nhóm & Dự Án</title>
+    <title>Nhóm 1</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 30px; line-height: 1.6; color: #333; }
         h1, h2, h3 { color: #222; }
@@ -16,8 +16,7 @@
 </head>
 <body>
 
-    <!-- Danh sách thành viên -->
-    <h2>Danh Sách Thành Viên Nhóm</h2>
+    <h2>Thành Viên Nhóm</h2>
     <ul class="members-list">
         <li>Chu Xuân Minh Đức - 224001782</li>
         <li>Nguyễn Tùng Dương - 224001781</li>
@@ -26,11 +25,10 @@
         <li>Vũ Mai Phương - 224001823</li>
     </ul>
 
-    <!-- Giới thiệu dự án -->
     <div class="project-section">
-        <h2>2.6. CHỦ ĐỀ 6: HỆ THỐNG QUẢN LÝ SỰ KIỆN/CÂU LẠC BỘ SINH VIÊN</h2>
+        <h2>Giới Thiệu Chủ Đề: HỆ THỐNG QUẢN LÝ SỰ KIỆN/CÂU LẠC BỘ SINH VIÊN</h2>
         
-        <h3>Bối cảnh bài toán</h3>
+        <h3>Mục Tiêu Chính </h3>
         <div class="highlight-box">
             Xây dựng cổng thông tin cho câu lạc bộ hoặc khoa để công bố sự kiện, nhận đăng ký, điểm danh và thống kê người tham gia.
         </div>
