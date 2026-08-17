@@ -1,0 +1,339 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f8fb;
+    color: #333;
+}
+
+.container {
+    width: 94%;
+    max-width: 1200px;
+    margin: 30px auto;
+    background-color: white;
+    padding: 25px 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================
+   TIÊU ĐỀ
+========================= */
+
+h1 {
+    margin: 0;
+    color: #1769aa;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+h2 {
+    color: #1769aa;
+    font-size: 19px;
+    margin-top: 28px;
+    margin-bottom: 8px;
+}
+
+.line {
+    height: 2px;
+    background-color: #1769aa;
+    margin-bottom: 20px;
+}
+
+.detail-line {
+    height: 1px;
+    background-color: #d9e6f0;
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   TÌM KIẾM
+========================= */
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.search-form label {
+    font-weight: bold;
+}
+
+.search-form input {
+    width: 350px;
+    padding: 9px 11px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+.search-form input:focus {
+    border-color: #1769aa;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.btn {
+    display: inline-block;
+    padding: 9px 15px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btn-blue {
+    background-color: #1769aa;
+    color: white;
+}
+
+.btn-blue:hover {
+    background-color: #12558a;
+}
+
+.btn-gray {
+    background-color: #777;
+    color: white;
+}
+
+.btn-gray:hover {
+    background-color: #5e5e5e;
+}
+
+.btn-red {
+    background-color: #d9534f;
+    color: white;
+}
+
+.btn-red:hover {
+    background-color: #bd3835;
+}
+
+
+/* =========================
+   BẢNG
+========================= */
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th {
+    background-color: #1769aa;
+    color: white;
+    padding: 12px 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+td {
+    border: 1px solid #d9d9d9;
+    padding: 11px 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+tbody tr:hover {
+    background-color: #eef6fc;
+}
+
+tbody tr.selected {
+    background-color: #dceefa;
+}
+
+
+/* =========================
+   LINK SINH VIÊN
+========================= */
+
+.student-link {
+    color: #1769aa;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.student-link:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   TRẠNG THÁI
+========================= */
+
+.status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 12px;
+    background-color: #eee;
+    font-size: 12px;
+}
+
+.status.active {
+    background-color: #dff3e4;
+    color: #24753a;
+}
+
+.status.locked {
+    background-color: #f8dddd;
+    color: #a12d2d;
+}
+
+
+/* =========================
+   CHI TIẾT SINH VIÊN
+========================= */
+
+.student-detail,
+.update-box {
+    margin-top: 30px;
+    padding: 22px;
+    border: 1px solid #d6e3ed;
+    border-radius: 6px;
+    background-color: #fafdff;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 35px;
+}
+
+.detail-grid div {
+    padding: 8px 0;
+    border-bottom: 1px solid #e8eef3;
+}
+
+.detail-grid strong {
+    color: #444;
+    display: inline-block;
+    min-width: 120px;
+}
+
+
+/* =========================
+   NÚT CẬP NHẬT / XÓA
+========================= */
+
+.action-box {
+    margin-top: 25px;
+    display: flex;
+    gap: 10px;
+}
+
+.delete-form {
+    display: inline;
+}
+
+
+/* =========================
+   FORM CẬP NHẬT
+========================= */
+
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    width: 150px;
+    font-weight: bold;
+}
+
+.form-row input,
+.form-row select {
+    width: 350px;
+    padding: 9px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+    outline: none;
+    border-color: #1769aa;
+}
+
+.form-row input[readonly] {
+    background-color: #eeeeee;
+}
+
+.form-buttons {
+    margin-top: 20px;
+    margin-left: 150px;
+    display: flex;
+    gap: 10px;
+}
+
+
+/* =========================
+   KHÔNG CÓ DỮ LIỆU
+========================= */
+
+.empty {
+    padding: 25px;
+    color: #777;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    .container {
+        width: 96%;
+        padding: 20px;
+    }
+
+    .search-form {
+        flex-wrap: wrap;
+    }
+
+    .search-form input {
+        width: 100%;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        display: block;
+    }
+
+    .form-row label {
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .form-row input,
+    .form-row select {
+        width: 100%;
+    }
+
+    .form-buttons {
+        margin-left: 0;
+    }
+}
