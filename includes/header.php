@@ -1,31 +1,33 @@
 <?php
-$currentUser = getCurrentUser();
+$pageTitle = $pageTitle ?? "Quản lý câu lạc bộ";
+$basePath = $basePath ?? "..";
 ?>
-<header class="site-header">
-    <div class="container header-content">
-        <div class="logo">
-            <a href="index.php">🎓 QLyCLB</a>
-        </div>
-        
-        <nav class="main-nav">
-            <ul>
-                <li><a href="index.php">Sự kiện</a></li>
-                <?php if (isLoggedIn()): ?>
-                    <li><a href="my_registrations.php">Đăng ký của tôi</a></li>
-                    <?php if (hasRole('organizer') || hasRole('admin')): ?>
-                        <li><a href="admin/dashboard.php">Quản trị</a></li>
-                    <?php endif; ?>
-                    <li class="user-menu">
-                        <span>Xin chào, <?= e($currentUser['full_name']) ?></span>
-                        <a href="logout.php" class="btn btn-small btn-secondary">Đăng xuất</a>
-                    </li>
-                <?php else: ?>
-                    <li><a href="login.php" class="btn btn-primary">Đăng nhập</a></li>
-                    <li><a href="register.php" class="btn btn-secondary">Đăng ký</a></li>
-                <?php endif; ?>
-            </ul>
-        </nav>
-    </div>
-</header>
 
-</content>
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title><?= htmlspecialchars($pageTitle) ?></title>
+
+    <link rel="stylesheet"
+          href="../public/css/dashboard.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <?php require_once __DIR__ . "/sidebar.php"; ?>
+
+    <div class="main-wrapper">
+
+        <?php require_once __DIR__ . "/navbar.php"; ?>
+
+        <main class="main-content"></main>

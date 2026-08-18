@@ -7,13 +7,13 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
-if ($_SESSION['user']['role'] !== 'admin') {
+if ($_SESSION['user']['role'] !== 'organizer') {
     die("Bạn không có quyền truy cập.");
 }
 
 ?>
 
-<h1>Admin Dashboard</h1>
+<h1>Organizer Dashboard</h1>
 
 <p>
     Xin chào,
