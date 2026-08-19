@@ -6,6 +6,9 @@
     <title>Document</title>
 </head>
 <body>
-    ahdajvfjavfjavhfvas
+    <?php 
+        $name = "Nguyễn Dương";
+        echo "Xin chào " . $name;
+    ?>
 </body>
 </html>
