@@ -10,6 +10,25 @@
 <?php
     session_start();
     require_once(dirname(__FILE__) . "/database/database.php");
+
+    // check nếu đã đăng nhập thì chuyển qua dashboard
+    if (isset($_SESSION['user'])) {
+
+        switch ($_SESSION['user']['role']) {
+
+            case 'admin':
+                header("Location: admin/dashboard.php");
+                exit;
+
+            case 'organizer':
+                header("Location: organizer/dashboard.php");
+                exit;
+
+            case 'member':
+                header("Location: member/dashboard.php");
+                exit;
+        }
+    }
     $error = "";
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -55,16 +74,14 @@
                         isset($user['status'])
                         && $user['status'] !== '1'
                     ) {
-                        $error = "Tài khoản của bạn đã bị khóa.";
+                        $error = "Tài khoản của bạn không tồn tại.";
 
                     } else {
                         // ========================================
                         // KIỂM TRA PASSWORD
                         // ========================================
-
+                        
                         if (password_verify($password, $user['password'])) {
-
-
                             // ========================================
                             // TẠO SESSION
                             // ========================================
@@ -91,7 +108,7 @@
                                     header("Location: loginsuccess.php");
                                     exit;
                                 case 'member':
-                                    header("Location: loginsuccess.php");
+                                    header("Location: member/dashboard.php");
                                     exit;
                                 default:
                                     $error = "Role của tài khoản không hợp lệ.";
