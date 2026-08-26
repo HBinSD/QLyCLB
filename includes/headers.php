@@ -6,6 +6,66 @@ $pageTitle = $pageTitle ?? "Quản lý câu lạc bộ";
     * {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body {
+        height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background: #f1f5f9;
+    }
+
+    .app {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Navbar nằm bên phải sidebar */
+    .navbar {
+        margin-left: 260px;
+        width: calc(100% - 260px);
+    }
+
+    .main-wrapper {
+        display: flex;
+        flex: 1;
+        margin-left: 260px;
+        min-height: calc(100vh - 72px);
+    }
+
+    .main-content {
+        flex: 1;
+        padding: 24px;
+        background: #f1f5f9;
+        min-height: calc(100vh - 72px);
+        width: 100%;
+    }
+
+    /* Responsive: thu sidebar trên mobile */
+    @media (max-width: 768px) {
+        .navbar {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .main-wrapper {
+            margin-left: 0;
+        }
+
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.25s ease;
+            z-index: 1100;
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .main-content {
+            min-height: calc(100vh - 64px);
+        }
     }
 </style>
 
@@ -36,4 +96,4 @@ $pageTitle = $pageTitle ?? "Quản lý câu lạc bộ";
 
         <?php require_once __DIR__ . "/sidebar.php"; ?>
 
-        <main class="main-content"></main>
+        <main class="main-content">

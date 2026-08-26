@@ -12,7 +12,6 @@
 
 .navbar {
     height: 72px;
-    width: 100%;
     background: #ffffff;
     border-bottom: 1px solid #e5e7eb;
     display: flex;
@@ -340,11 +339,9 @@
     ========================== -->
 
     <div class="navbar-left">
-
         <button class="mobile-menu-btn" onclick="toggleSidebar()" type="button" aria-label="Mở menu">
             ☰
         </button>
-
 
         <div class="navbar-title">
 
@@ -359,7 +356,6 @@
         </div>
 
     </div>
-
 
     <!-- =========================
          RIGHT
@@ -403,7 +399,6 @@
 
             </button>
 
-
             <!-- DROPDOWN -->
 
             <div class="account-menu" id="accountMenu">
@@ -411,7 +406,6 @@
                 <div class="account-menu-name">
                     <?= htmlspecialchars($fullName) ?>
                 </div>
-
 
                 <a href="../member/profile.php">
 
