@@ -1,3 +1,40 @@
+<?php
+/**
+ * Sidebar dùng chung cho mọi trang.
+ * - Chọn menu theo role: admin | organizer | member
+ * - Tô đậm mục đang mở theo $activeMenu hoặc tên file hiện tại
+ *
+ * Cách dùng trên từng trang (trước khi include headers.php):
+ *   $activeMenu = 'profile.php';
+ */
+
+$userRole = strtolower((string) ($_SESSION['user']['role'] ?? 'member'));
+$allowedRoles = ['admin', 'organizer', 'member'];
+if (!in_array($userRole, $allowedRoles, true)) {
+    $userRole = 'member';
+}
+
+$currentPage = basename($_SERVER['PHP_SELF'] ?? '');
+
+// Cho phép trang con tự chỉ định, ví dụ edit-member.php vẫn tô "Quản lý thành viên"
+$activeMenu = $activeMenu ?? $currentPage;
+
+$roleTitles = [
+    'admin'     => 'TÀI KHOẢN ADMIN',
+    'organizer' => 'TÀI KHOẢN BAN TỔ CHỨC',
+    'member'    => 'TÀI KHOẢN THÀNH VIÊN',
+];
+$sidebarTitle = $roleTitles[$userRole];
+
+if (!function_exists('sidebar_active')) {
+    function sidebar_active(string $page): string
+    {
+        global $activeMenu;
+        return $activeMenu === $page ? ' active' : '';
+    }
+}
+?>
+
 <style>
     .sidebar {
         width: 260px;
@@ -10,7 +47,7 @@
         position: fixed;
         left: 0;
         top: 0;
-        z-index: 900;
+        z-index: 1001;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
@@ -51,7 +88,6 @@
         font-size: 15px;
         font-weight: 500;
         transition: all 0.2s ease;
-        border: none;
     }
 
     .sidebar-item:hover {
@@ -62,6 +98,7 @@
     .sidebar-item.active {
         background: #1e3a8a;
         color: #ffffff;
+        font-weight: 700;
         box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
     }
 
@@ -71,17 +108,12 @@
         flex-shrink: 0;
     }
 
-    .sidebar-text {
-        line-height: 1.2;
-    }
-
-    /* Mobile overlay khi mở sidebar */
     .sidebar-overlay {
         display: none;
         position: fixed;
         inset: 0;
         background: rgba(15, 23, 42, 0.4);
-        z-index: 1050;
+        z-index: 850;
     }
 
     .sidebar-overlay.show {
@@ -90,7 +122,14 @@
 
     @media (max-width: 768px) {
         .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.25s ease;
+            z-index: 1100;
             box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
         }
     }
 </style>
@@ -98,46 +137,12 @@
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <div class="sidebar-title">
-            TÀI KHOẢN THÀNH VIÊN
+            <?= htmlspecialchars($sidebarTitle) ?>
         </div>
     </div>
 
     <nav class="sidebar-menu">
-        <!-- TRANG CHỦ -->
-        <a href="dashboard.php" class="sidebar-item active">
-            <span class="sidebar-icon">🏠</span>
-            <span class="sidebar-text">Trang chủ</span>
-        </a>
-
-        <!-- GIỚI THIỆU -->
-        <a href="#" class="sidebar-item">
-            <span class="sidebar-text">Giới thiệu</span>
-        </a>
-
-        <!-- TIN TỨC -->
-        <a href="#" class="sidebar-item">
-            <span class="sidebar-text">Tin tức</span>
-        </a>
-
-        <!-- SINH HOẠT -->
-        <a href="#" class="sidebar-item">
-            <span class="sidebar-text">Sinh hoạt</span>
-        </a>
-
-        <!-- HOẠT ĐỘNG -->
-        <a href="#" class="sidebar-item">
-            <span class="sidebar-text">Hoạt động</span>
-        </a>
-
-        <!-- LIÊN HỆ -->
-        <a href="#" class="sidebar-item">
-            <span class="sidebar-text">Liên hệ</span>
-        </a>
-
-        <!-- THÔNG TIN CÁ NHÂN -->
-        <a href="profile.php" class="sidebar-item">
-            <span class="sidebar-text">Thông tin cá nhân</span>
-        </a>
+        <?php require __DIR__ . "/sidebar-{$userRole}.php"; ?>
     </nav>
 </aside>
 
@@ -147,18 +152,16 @@
 function toggleSidebar() {
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("sidebarOverlay");
-    if (sidebar && overlay) {
-        sidebar.classList.toggle("open");
-        overlay.classList.toggle("show");
-    }
+    if (!sidebar || !overlay) return;
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("show");
 }
 
 function closeSidebar() {
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("sidebarOverlay");
-    if (sidebar && overlay) {
-        sidebar.classList.remove("open");
-        overlay.classList.remove("show");
-    }
+    if (!sidebar || !overlay) return;
+    sidebar.classList.remove("open");
+    overlay.classList.remove("show");
 }
 </script>

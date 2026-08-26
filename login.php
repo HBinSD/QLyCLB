@@ -102,10 +102,10 @@
 
                             switch ($user['role']) {
                                 case 'admin':
-                                    header("Location: loginsuccess.php");
+                                    header("Location: admin/dashboard.php");
                                     exit;
                                 case 'organizer':
-                                    header("Location: loginsuccess.php");
+                                    header("Location: organizer/dashboard.php");
                                     exit;
                                 case 'member':
                                     header("Location: member/dashboard.php");

@@ -21,7 +21,6 @@ $pageTitle = $pageTitle ?? "Quản lý câu lạc bộ";
         flex-direction: column;
     }
 
-    /* Navbar nằm bên phải sidebar */
     .navbar {
         margin-left: 260px;
         width: calc(100% - 260px);
@@ -42,7 +41,6 @@ $pageTitle = $pageTitle ?? "Quản lý câu lạc bộ";
         width: 100%;
     }
 
-    /* Responsive: thu sidebar trên mobile */
     @media (max-width: 768px) {
         .navbar {
             margin-left: 0;
@@ -51,16 +49,6 @@ $pageTitle = $pageTitle ?? "Quản lý câu lạc bộ";
 
         .main-wrapper {
             margin-left: 0;
-        }
-
-        .sidebar {
-            transform: translateX(-100%);
-            transition: transform 0.25s ease;
-            z-index: 1100;
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
         }
 
         .main-content {
@@ -73,21 +61,13 @@ $pageTitle = $pageTitle ?? "Quản lý câu lạc bộ";
 <html lang="vi">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($pageTitle) ?></title>
-
-    <link rel="stylesheet"
-          href="dashboard.css">
-
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 
 <body>
-
 <div class="app">
 
     <?php require_once __DIR__ . "/navbar.php"; ?>

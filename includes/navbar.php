@@ -2,6 +2,7 @@
     $user = $_SESSION['user'] ?? [];
 
     $fullName = $user['fullname'] ?? 'Người dùng';
+    $role = $user['role'] ??'';
     $avatar   = $user['avatar'] ?? '';
 ?>
 
@@ -168,6 +169,7 @@
 .account-role {
     color: #64748b;
     font-size: 12px;
+    margin-top: 3px;
 }
 
 .arrow {
@@ -339,9 +341,6 @@
     ========================== -->
 
     <div class="navbar-left">
-        <button class="mobile-menu-btn" onclick="toggleSidebar()" type="button" aria-label="Mở menu">
-            ☰
-        </button>
 
         <div class="navbar-title">
 
@@ -356,6 +355,7 @@
         </div>
 
     </div>
+
 
     <!-- =========================
          RIGHT
@@ -387,7 +387,11 @@
                     </strong>
 
                     <span class="account-role">
-                        Thành viên
+                        <?php  if ($role == "admin") {
+                            echo 'Người quản trị';
+                        } else if ($role == "organizer") {
+                            echo 'Người tổ chức';
+                        } else { echo 'Thành viên'; } ?>
                     </span>
 
                 </div>
@@ -399,6 +403,7 @@
 
             </button>
 
+
             <!-- DROPDOWN -->
 
             <div class="account-menu" id="accountMenu">
@@ -406,6 +411,7 @@
                 <div class="account-menu-name">
                     <?= htmlspecialchars($fullName) ?>
                 </div>
+
 
                 <a href="../member/profile.php">
 
