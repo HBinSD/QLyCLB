@@ -10,12 +10,9 @@ body {
     color: #1f2937;
 }
 
-/* ================= CONTAINER ================= */
-
 .container {
     width: 1200px;
     max-width: 90%;
-
     margin: 40px auto;
 }
 
@@ -24,17 +21,14 @@ body {
 
 .page-title {
     display: flex;
-
     justify-content: space-between;
     align-items: center;
-
     margin-bottom: 25px;
 }
 
 .page-title h1 {
     font-size: 30px;
     color: #12395b;
-
     margin-bottom: 8px;
 }
 
@@ -43,20 +37,15 @@ body {
 }
 
 
-/* ================= BUTTON ================= */
+/* ================= BUTTON ADD ================= */
 
 .btn-add {
     border: none;
-
     background-color: #1769aa;
     color: white;
-
     padding: 13px 20px;
-
     border-radius: 6px;
-
     cursor: pointer;
-
     font-size: 15px;
 }
 
@@ -69,27 +58,18 @@ body {
 
 .search-box {
     background-color: white;
-
     padding: 18px;
-
     border-radius: 8px;
-
     margin-bottom: 25px;
-
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .search-box input {
     width: 100%;
-
     padding: 13px 15px;
-
     border: 1px solid #d1d5db;
-
     border-radius: 6px;
-
     font-size: 15px;
-
     outline: none;
 }
 
@@ -102,77 +82,56 @@ body {
 
 .notification-list {
     display: flex;
-
     flex-direction: column;
-
     gap: 20px;
 }
 
 .notification-card {
     background-color: white;
-
     display: flex;
-
     border-radius: 10px;
-
     overflow: hidden;
-
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
 }
 
 .notification-card img {
     width: 280px;
     height: 190px;
-
     object-fit: cover;
 }
 
 .notification-content {
     padding: 22px;
-
     flex: 1;
 }
 
 .badge {
     display: inline-block;
-
     background-color: #e6f2ff;
     color: #1769aa;
-
     padding: 5px 10px;
-
     border-radius: 20px;
-
     font-size: 12px;
-
     margin-bottom: 10px;
 }
 
 .notification-content h2 {
     font-size: 21px;
-
     color: #12395b;
-
     margin-bottom: 10px;
 }
 
 .notification-content p {
     color: #6b7280;
-
     line-height: 1.6;
-
     margin-bottom: 15px;
 }
 
 .notification-info {
     display: flex;
-
     gap: 25px;
-
     color: #6b7280;
-
     font-size: 14px;
-
     margin-bottom: 15px;
 }
 
@@ -181,36 +140,58 @@ body {
 
 .actions {
     display: flex;
-
     gap: 10px;
+    align-items: center;
 }
 
-.actions button {
+.actions button,
+.actions a {
     border: none;
-
     padding: 8px 14px;
-
     border-radius: 5px;
-
     cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
 }
+
+
+/* XEM CHI TIẾT */
 
 .btn-detail {
     background-color: #1769aa;
-
     color: white;
 }
+
+
+/* CẬP NHẬT */
 
 .btn-edit {
     background-color: #f0ad4e;
-
     color: white;
 }
 
+.btn-edit:hover {
+    background-color: #d99128;
+}
+
+
+/* XÓA */
+
 .btn-delete {
     background-color: #dc3545;
-
     color: white;
+}
+
+.btn-delete:hover {
+    background-color: #b52a37;
+}
+
+
+/* Form xóa không làm thay đổi giao diện */
+
+.delete-form {
+    margin: 0;
+    padding: 0;
 }
 
 
@@ -231,12 +212,16 @@ body {
 
     justify-content: center;
     align-items: center;
+
+    z-index: 1000;
 }
 
 .modal-content {
     width: 550px;
-
     max-width: 90%;
+
+    max-height: 90vh;
+    overflow-y: auto;
 
     background-color: white;
 
@@ -260,11 +245,17 @@ body {
 
 .close {
     font-size: 28px;
-
     cursor: pointer;
-
     color: #777;
+    text-decoration: none;
 }
+
+.close:hover {
+    color: #000;
+}
+
+
+/* ================= FORM ================= */
 
 form label {
     display: block;
@@ -273,7 +264,6 @@ form label {
     margin-bottom: 6px;
 
     font-weight: bold;
-
     font-size: 14px;
 }
 
@@ -323,30 +313,34 @@ form textarea:focus {
     border-radius: 5px;
 
     cursor: pointer;
+
+    text-decoration: none;
+
+    font-size: 14px;
 }
 
 .btn-cancel {
     background-color: #e5e7eb;
+    color: #333;
 }
 
 .btn-save {
     background-color: #1769aa;
-
     color: white;
+}
+
+
+/* ================= DETAIL ================= */
+
+.detail-content p {
+    line-height: 1.8;
+    color: #4b5563;
 }
 
 
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 800px) {
-
-    .header {
-        padding: 0 20px;
-    }
-
-    nav {
-        display: none;
-    }
 
     .notification-card {
         flex-direction: column;
@@ -359,10 +353,46 @@ form textarea:focus {
 
     .page-title {
         flex-direction: column;
-
         align-items: flex-start;
-
         gap: 15px;
     }
 
+    .actions {
+        flex-wrap: wrap;
+    }
+
+}
+.success-message {
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #a7f3d0;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.pagination a {
+    padding: 8px 13px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+    background: white;
+}
+
+.pagination a:hover {
+    background: #eee;
+}
+
+.pagination a.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
 }
