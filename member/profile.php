@@ -3,11 +3,12 @@ session_start();
 require_once "../includes/auth.php";
 
 $pageTitle  = "Trang chủ";
-$activeMenu = "dashboard.php"; 
+$activeMenu = "profile.php"; 
 
 require_once "../includes/headers.php";
 $user = $_SESSION['user'] ?? [];
 ?>
+
 
 <div class="dashboard-content">
     <h2 style="margin-bottom: 12px; color: #1e3a5f;">

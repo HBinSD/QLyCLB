@@ -47,7 +47,7 @@ if (!function_exists('sidebar_active')) {
         position: fixed;
         left: 0;
         top: 0;
-        z-index: 1001;
+        z-index: 900;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
