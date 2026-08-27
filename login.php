@@ -46,23 +46,21 @@
             $error = "Username không hợp lệ.";
         } else {
             try {
-                $pdo = db();
+                $database = new Database();
+                $db = $database->getConnection();
                 $sql = "SELECT
                             us.username,
                             us.password,
                             us.role,
                             us.status,
-                            u.fullname,
-                            u.email,
-                            u.DOB,
-                            u.phone,
-                            u.id_number
+                            us.created_at,
+                            u.*
                         FROM user AS us
                         LEFT JOIN userinfo AS u
                             ON us.username = u.username
                         WHERE us.username = ?";
 
-                $stmt = $pdo->prepare($sql);
+                $stmt = $db->prepare($sql);
                 $stmt->execute([
                     $username
                 ]);
@@ -90,10 +88,13 @@
                                 'username' => $user['username'],
                                 'fullname' => $user['fullname'] ?? '',
                                 'email' => $user['email'] ?? '',
-                                'DOB' => $user['DOB'] ?? '',
+                                'DOB' => $user['dob'] ?? '',
                                 'phone' => $user['phone'] ?? '',
                                 'id_number' => $user['id_number'] ?? '',
-                                'role' => $user['role']
+                                'gender' => $user['gender'] ?? '',
+                                'role' => $user['role'],
+                                'ngayTao' => $user['created_at'] ??'',
+                                'avatar' => $user['avt_links'] ??'',
                             ];
 
                             // ========================================

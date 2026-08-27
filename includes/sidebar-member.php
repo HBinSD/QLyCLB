@@ -4,11 +4,11 @@
 </a>
 
 <a href="about.php" class="sidebar-item<?= sidebar_active('about.php') ?>">
-    <span class="sidebar-text">Giới thiệu</span>
+    <span class="sidebar-text">Thông tin CLB</span>
 </a>
 
 <a href="news.php" class="sidebar-item<?= sidebar_active('news.php') ?>">
-    <span class="sidebar-text">Tin tức</span>
+    <span class="sidebar-text">Thông báo</span>
 </a>
 
 <a href="meetings.php" class="sidebar-item<?= sidebar_active('meetings.php') ?>">
@@ -16,7 +16,11 @@
 </a>
 
 <a href="activities.php" class="sidebar-item<?= sidebar_active('activities.php') ?>">
-    <span class="sidebar-text">Hoạt động</span>
+    <span class="sidebar-text">Sự kiện</span>
+</a>
+
+<a href="activities.php" class="sidebar-item<?= sidebar_active('activities.php') ?>">
+    <span class="sidebar-text">Sự kiện đã đăng ký</span>
 </a>
 
 <a href="contact.php" class="sidebar-item<?= sidebar_active('contact.php') ?>">
