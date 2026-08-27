@@ -1,12 +1,4 @@
 <?php
-/**
- * Sidebar dùng chung cho mọi trang.
- * - Chọn menu theo role: admin | organizer | member
- * - Tô đậm mục đang mở theo $activeMenu hoặc tên file hiện tại
- *
- * Cách dùng trên từng trang (trước khi include headers.php):
- *   $activeMenu = 'profile.php';
- */
 
 $userRole = strtolower((string) ($_SESSION['user']['role'] ?? 'member'));
 $allowedRoles = ['admin', 'organizer', 'member'];
@@ -47,7 +39,7 @@ if (!function_exists('sidebar_active')) {
         position: fixed;
         left: 0;
         top: 0;
-        z-index: 900;
+        z-index: 1001;
         overflow-y: auto;
         display: flex;
         flex-direction: column;
