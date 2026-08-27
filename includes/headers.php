@@ -55,6 +55,38 @@ $pageTitle = $pageTitle ?? "Quản lý câu lạc bộ";
             min-height: calc(100vh - 64px);
         }
     }
+
+    /* CSS tối ưu cho Global Loader */
+    #global-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #ffffff; /* Màu nền che trang */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999999;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    #global-loader.hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #3498db;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
 </style>
 
 <!DOCTYPE html>
@@ -67,12 +99,17 @@ $pageTitle = $pageTitle ?? "Quản lý câu lạc bộ";
 </head>
 
 <body>
-<div class="app">
+    <div id="global-loader">
+    <div class="spinner"></div>
+    </div>
 
-    <?php require_once __DIR__ . "/navbar.php"; ?>
 
-    <div class="main-wrapper">
+    <div class="app">
 
-        <?php require_once __DIR__ . "/sidebar.php"; ?>
+        <?php require_once __DIR__ . "/navbar.php"; ?>
 
-        <main class="main-content">
+        <div class="main-wrapper">
+
+            <?php require_once __DIR__ . "/sidebar.php"; ?>
+
+            <main class="main-content">

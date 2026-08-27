@@ -4,10 +4,12 @@ require_once "../includes/auth.php";
 
 $pageTitle  = "Trang chủ";
 $activeMenu = "dashboard.php"; 
-
 require_once "../includes/headers.php";
+
 $user = $_SESSION['user'] ?? [];
 ?>
+<link rel="stylesheet" href="dashboard.css">
+
 
 <div class="dashboard-content">
     <h2 style="margin-bottom: 12px; color: #1e3a5f;">
@@ -21,5 +23,7 @@ $user = $_SESSION['user'] ?? [];
 </main>
 </div>
 </div>
-</body>
-</html>
+
+<?php
+    require_once "../includes/footer.php";
+?>

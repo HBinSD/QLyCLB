@@ -409,6 +409,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </main>
 </div>
 </div>
-</body>
 
-</html>
+<?php
+require_once "../includes/footer.php";
+?>
