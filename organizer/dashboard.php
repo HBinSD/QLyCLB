@@ -13,3 +13,9 @@ $user = $_SESSION['user'] ?? [];
     <h2 style="margin-bottom: 12px; color: #1e3a5f;">Xin chào, <?= htmlspecialchars($user['fullname'] ?? 'Thành viên') ?>!</h2>
     <p style="color: #64748b;">Chào mừng bạn đến với hệ thống quản lý câu lạc bộ.</p>
 </div>
+
+
+<?php
+    require_once "../includes/footer.php";
+?>
+</body>
