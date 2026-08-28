@@ -1,5 +1,4 @@
 <?php
-// 1. Khởi tạo kết nối CSDL quanly_sukien
 $host = 'localhost';
 $user = 'root';
 $pass = '';
