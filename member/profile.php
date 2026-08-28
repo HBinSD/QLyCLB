@@ -13,7 +13,7 @@ $user = $_SESSION['user'] ?? [];
 $avatar = $_SESSION['user']['avatar'] ?? '';
 ?>
 
-<link rel="stylesheet" href="profile.css">
+<link rel="stylesheet" href="css/profile.css">
 <div class="profile-page">
 
     <!-- Tiêu đề -->

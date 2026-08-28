@@ -1,0 +1,370 @@
+.members-page {
+    width: 100%;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.members-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 22px;
+}
+
+
+.members-header h2 {
+    margin: 0 0 6px;
+
+    color: #1e3a5f;
+
+    font-size: 26px;
+}
+
+
+.members-header p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   MEMBER COUNT
+========================================= */
+
+.member-count {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+
+    padding: 10px 16px;
+
+    background: #e8f0f8;
+
+    border-radius: 10px;
+
+    color: #1e3a5f;
+}
+
+
+.member-count strong {
+    font-size: 22px;
+}
+
+
+.member-count span {
+    font-size: 13px;
+}
+
+
+/* =========================================
+   TOOLBAR
+========================================= */
+
+.members-toolbar {
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-bottom: 16px;
+}
+
+
+.member-search {
+    width: 300px;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 10px 13px;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+}
+
+
+.member-search span {
+    font-size: 16px;
+}
+
+
+.member-search input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    font-size: 14px;
+
+    color: #334155;
+}
+
+
+.member-search input::placeholder {
+    color: #94a3b8;
+}
+
+
+/* =========================================
+   TABLE
+========================================= */
+
+.members-table-wrapper {
+    width: 100%;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    overflow-x: auto;
+
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+
+.members-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 700px;
+}
+
+
+/* Header */
+
+.members-table thead {
+    background: #f8fafc;
+}
+
+
+.members-table th {
+    padding: 15px 16px;
+
+    text-align: left;
+
+    color: #475569;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+
+/* Body */
+
+.members-table td {
+    padding: 15px 16px;
+
+    border-bottom: 1px solid #f1f5f9;
+
+    color: #475569;
+
+    font-size: 14px;
+}
+
+
+.members-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+.members-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+/* =========================================
+   STT
+========================================= */
+
+.member-number {
+    width: 50px;
+
+    color: #94a3b8 !important;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   USERNAME
+========================================= */
+
+.member-username {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    color: #1e293b;
+
+    font-weight: 600;
+}
+
+
+.member-avatar {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e8f0f8;
+    font-size: 16px;
+}
+
+.member-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 50%;
+}
+
+
+/* =========================================
+   POSITION
+========================================= */
+
+.position-badge {
+    display: inline-block;
+
+    padding: 5px 11px;
+
+    border-radius: 15px;
+
+    background: #e0f2fe;
+
+    color: #0369a1;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.position-badge.member {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.status-badge {
+    display: inline-block;
+
+    padding: 5px 11px;
+
+    border-radius: 15px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.status-badge.active {
+    background: #dcfce7;
+
+    color: #166534;
+}
+
+
+.status-badge.inactive {
+    background: #fee2e2;
+
+    color: #991b1b;
+}
+
+
+/* =========================================
+   EMPTY
+========================================= */
+
+.no-members {
+    padding: 40px !important;
+
+    text-align: center;
+
+    color: #94a3b8 !important;
+}
+
+
+/* =========================================
+   NO CLUB
+========================================= */
+
+.members-empty {
+    padding: 70px 20px;
+
+    text-align: center;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+}
+
+
+.empty-icon {
+    font-size: 50px;
+
+    margin-bottom: 15px;
+}
+
+
+.members-empty h2 {
+    margin: 0 0 8px;
+
+    color: #1e3a5f;
+}
+
+
+.members-empty p {
+    margin: 0;
+
+    color: #64748b;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .members-header {
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .member-count {
+        flex-shrink: 0;
+    }
+
+    .member-search {
+        width: 100%;
+    }
+
+}

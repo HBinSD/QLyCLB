@@ -3,7 +3,7 @@ session_start();
 
 require_once "../includes/auth.php";
 require_once "../database/database.php";
-require_once "../includes/headers.php";
+
 $pageTitle = "Chỉnh sửa thông tin cá nhân";
 $activeMenu = "profile.php";
 
@@ -13,7 +13,7 @@ if (empty($user['username'])) {
     header("Location: ../login.php");
     exit;
 }
-
+require_once "../includes/headers.php";
 $message = "";
 $error = "";
 
@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 ?>
 
-<link rel="stylesheet" href="edit_profile.css">
+<link rel="stylesheet" href="css/edit_profile.css">
 
 <div class="profile-page">
 

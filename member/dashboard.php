@@ -8,7 +8,7 @@ require_once "../includes/headers.php";
 
 $user = $_SESSION['user'] ?? [];
 ?>
-<link rel="stylesheet" href="dashboard.css">
+<link rel="stylesheet" href="css/dashboard.css">
 
 
 <div class="dashboard-content">

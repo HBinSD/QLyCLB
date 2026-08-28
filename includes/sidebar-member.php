@@ -3,7 +3,7 @@
     <span class="sidebar-text">Trang chủ</span>
 </a>
 
-<a href="about.php" class="sidebar-item<?= sidebar_active('about.php') ?>">
+<a href="club.php" class="sidebar-item<?= sidebar_active('club.php') ?>">
     <span class="sidebar-text">Thông tin CLB</span>
 </a>
 
