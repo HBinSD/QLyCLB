@@ -70,7 +70,7 @@
                 } else {
                     if (
                         isset($user['status'])
-                        && $user['status'] !== '1'
+                        && $user['status'] != 1
                     ) {
                         $error = "Tài khoản của bạn không tồn tại.";
 
