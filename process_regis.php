@@ -3,7 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// 1. Kết nối CSDL quanly_sukien
 $conn = mysqli_connect("localhost", "root", "", "quanly_sukien");
 
 if (!$conn) {
