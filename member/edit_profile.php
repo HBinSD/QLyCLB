@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (!isset($allowedTypes[$mimeType])) {
                 $error = "Chỉ được upload ảnh JPG, PNG, GIF hoặc WEBP.";
             } else {
-                $uploadDir = "../uploads/avatars/";
+                $uploadDir = "uploads/avatars/";
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
