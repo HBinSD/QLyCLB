@@ -15,14 +15,6 @@
     <span class="sidebar-text">Sinh hoạt</span>
 </a>
 
-<a href="activities.php" class="sidebar-item<?= sidebar_active('activities.php') ?>">
-    <span class="sidebar-text">Sự kiện</span>
-</a>
-
-<a href="activities.php" class="sidebar-item<?= sidebar_active('activities.php') ?>">
-    <span class="sidebar-text">Sự kiện đã đăng ký</span>
-</a>
-
 <a href="contact.php" class="sidebar-item<?= sidebar_active('contact.php') ?>">
     <span class="sidebar-text">Liên hệ</span>
 </a>
