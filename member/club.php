@@ -201,12 +201,7 @@ $createdAt = !empty($club['created_at'])
                     </div>
 
                     <div class="club-value normal">
-                        <?= nl2br(
-                            htmlspecialchars(
-                                $club['description']
-                                ?? 'Chưa có giới thiệu'
-                            )
-                        ) ?>
+                        <?= nl2br( htmlspecialchars( $club['description'] ?? 'Chưa có giới thiệu' ) ) ?>
                     </div>
 
                 </div>
@@ -220,12 +215,7 @@ $createdAt = !empty($club['created_at'])
                     </div>
 
                     <div class="club-value normal">
-                        <?= nl2br(
-                            htmlspecialchars(
-                                $club['rule']
-                                ?? 'Chưa có quy định'
-                            )
-                        ) ?>
+                        <?= nl2br( htmlspecialchars( $club['rule'] ?? 'Chưa có quy định' ) ) ?>
                     </div>
 
                 </div>

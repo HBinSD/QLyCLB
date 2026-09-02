@@ -127,18 +127,22 @@ $clubId = $userClub['club_id'];
 */
 
 $sql = "
-    SELECT
-        cm.id,
+     select
         cm.username,
         cm.club_id,
         cm.joined_at,
         cm.position,
         cm.status,
         us.fullname,
-        us.avt_links
+        us.avt_links,
+        cb.band_name
     FROM ClubMember AS cm
     JOIN UserInfo AS us
         ON us.username = cm.username
+    left join clubbandmember as cbm
+    	on cbm.username = cm.username
+    left join clubband as cb
+    	on cb.band_id = cbm.band_id
     WHERE cm.club_id = :club_id
     ORDER BY
         CASE
@@ -178,12 +182,6 @@ $stmtClubInfo->execute([
 
 $clubInfo = $stmtClubInfo->fetch(PDO::FETCH_ASSOC);
 
-
-/*
-|--------------------------------------------------------------------------
-| Load header
-|--------------------------------------------------------------------------
-*/
 
 require_once "../includes/headers.php";
 ?>
@@ -342,25 +340,12 @@ require_once "../includes/headers.php";
 
                         <tr>
 
-                            <th>
-                                STT
-                            </th>
-
-                            <th>
-                                Họ tên
-                            </th>
-
-                            <th>
-                                Chức vụ
-                            </th>
-
-                            <th>
-                                Ngày tham gia
-                            </th>
-
-                            <th>
-                                Trạng thái
-                            </th>
+                            <th> STT </th> 
+                            <th> Họ tên </th> 
+                            <th> Chức vụ </th> 
+                            <th> Ngày tham gia </th>
+                            <th> Thuộc ban </th> 
+                            <th> Trạng thái </th>
 
                         </tr>
 
@@ -414,25 +399,18 @@ require_once "../includes/headers.php";
                             <!-- Position -->
                             <td>
 
-                                <?php
-                                        $position =
-                                            trim(
-                                                $member['position'] ?? ''
-                                            );
+                                <?php $position = trim( $member['position'] ?? '' ); 
+                                
+                                if ($position === ''): ?>
 
-                                        if ($position === ''):
-                                            ?>
-
-                                <span class="position-badge member">
-                                    Thành viên
-                                </span>
+                                    <span class="position-badge member">
+                                        Thành viên
+                                    </span>
 
                                 <?php else: ?>
 
                                 <span class="position-badge">
-                                    <?= htmlspecialchars(
-                                                    $position
-                                                ) ?>
+                                    <?= htmlspecialchars( $position ) ?>
                                 </span>
 
                                 <?php endif; ?>
@@ -445,24 +423,32 @@ require_once "../includes/headers.php";
 
                                 <?php
 
-                                        if (!empty($member['joined_at'])) {
+                                    if (!empty($member['joined_at'])) {
+                                        echo htmlspecialchars( date('d/m/Y',strtotime( $member['joined_at'])));
+                                    } else {
+                                        echo 'Chưa cập nhật';
+                                    }
 
-                                            echo htmlspecialchars(
-                                                date(
-                                                    'd/m/Y',
-                                                    strtotime(
-                                                        $member['joined_at']
-                                                    )
-                                                )
-                                            );
+                                ?>
 
-                                        } else {
+                            </td>
 
-                                            echo 'Chưa cập nhật';
+                            <!-- Status -->
+                            <td>
 
-                                        }
+                                <?php if (!empty($member['band_name'])): ?>
 
-                                        ?>
+                                <span class="status-badge active">
+                                    <?= htmlspecialchars($member['band_name']) ?>
+                                </span>
+
+                                <?php else: ?>
+
+                                <span class="status-badge inactive">
+                                    <?php echo 'Chưa vào ban' ?>
+                                </span>
+
+                                <?php endif; ?>
 
                             </td>
 
@@ -488,9 +474,9 @@ require_once "../includes/headers.php";
 
                         </tr>
 
-                        <?php endforeach; ?>
+                    <?php endforeach; ?>
 
-                        <?php else: ?>
+                    <?php else: ?>
 
                         <tr>
 
@@ -500,7 +486,7 @@ require_once "../includes/headers.php";
 
                         </tr>
 
-                        <?php endif; ?>
+                    <?php endif; ?>
 
                     </tbody>
 
