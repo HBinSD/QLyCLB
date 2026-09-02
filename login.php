@@ -36,10 +36,6 @@
         $username = trim($_POST["username"] ?? "");
         $password = $_POST["password"] ?? "";
 
-        // ========================================
-        // VALIDATE FORM
-        // ========================================
-
         if ($username === "" || $password === "") {
             $error = "Vui lòng nhập đầy đủ username và mật khẩu.";
         } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
@@ -83,7 +79,8 @@
                             // ========================================
                             // TẠO SESSION
                             // ========================================
-
+                            session_regenerate_id(true);
+                    
                             $_SESSION['user'] = [
                                 'username' => $user['username'],
                                 'fullname' => $user['fullname'] ?? '',

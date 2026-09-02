@@ -1,5 +1,4 @@
 <a href="dashboard.php" class="sidebar-item<?= sidebar_active('dashboard.php') ?>">
-    <span class="sidebar-icon">🏠</span>
     <span class="sidebar-text">Trang chủ</span>
 </a>
 
