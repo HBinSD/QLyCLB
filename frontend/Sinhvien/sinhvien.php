@@ -1,57 +1,30 @@
 <?php
-session_start();
+require_once "../includes/auth.php";
+require_once "../database/database.php";
 
-if (!isset($_SESSION['sinhvien'])) {
-    $_SESSION['sinhvien'] = [
-        1 => [
-            'msv' => '224001802',
-            'hoten' => 'Phạm Thị Hoàng Lan',
-            'lop' => 'CNTT D2024',
-            'khoa' => 'Công nghệ thông tin',
-            'email' => 'lan@example.com',
-            'sdt' => '0987654321',
-            'ban' => 'Truyền thông',
-            'chucvu' => 'Thành viên',
-            'trangthai' => 'Đang hoạt động'
-        ],
+$database = new Database();
+$db = $database->getConnection();
 
-        2 => [
-            'msv' => '224001781',
-            'hoten' => 'Nguyễn Tùng Dương',
-            'lop' => 'CNTT D2024',
-            'khoa' => 'Công nghệ thông tin',
-            'email' => 'duong@example.com',
-            'sdt' => '0977777777',
-            'ban' => 'Kỹ thuật',
-            'chucvu' => 'Trưởng ban',
-            'trangthai' => 'Đang hoạt động'
-        ],
+$sql = "
+    SELECT 
+        cm.username,
+        ui.fullname,
+        ui.student_code,
+        ui.class,
+        ui.faculty,
+        ui.email,
+        ui.phone,
+        cm.ban,
+        cm.position,
+        cm.status
+    FROM ClubMember cm
+    JOIN UserInfo ui ON cm.username = ui.username
+";
 
-        3 => [
-            'msv' => '224001798',
-            'hoten' => 'Đinh Gia Hưng',
-            'lop' => 'CNTT D2024',
-            'khoa' => 'Công nghệ thông tin',
-            'email' => 'hung@example.com',
-            'sdt' => '0966666666',
-            'ban' => 'Sự kiện',
-            'chucvu' => 'Thành viên',
-            'trangthai' => 'Đang hoạt động'
-        ],
+$stmt = $db->prepare($sql);
+$stmt->execute();
 
-        4 => [
-            'msv' => '224001823',
-            'hoten' => 'Vũ Mai Phương',
-            'lop' => 'CNTT D2024',
-            'khoa' => 'Công nghệ thông tin',
-            'email' => 'phuong@example.com',
-            'sdt' => '0955555555',
-            'ban' => 'Đối ngoại',
-            'chucvu' => 'Phó ban',
-            'trangthai' => 'Đang hoạt động'
-        ]
-    ];
-}
+$danhSachSinhVien = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 /*
@@ -60,7 +33,18 @@ if (!isset($_SESSION['sinhvien'])) {
 |--------------------------------------------------------------------------
 */
 
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$id = $_GET['id'] ?? '';
+
+$sinhVien = null;
+
+if ($id !== '') {
+    foreach ($danhSachSinhVien as $student) {
+        if ($student['student_code'] === $id) {
+            $sinhVien = $student;
+            break;
+        }
+    }
+}
 
 
 /*
@@ -71,11 +55,15 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if (isset($_POST['delete'])) {
 
-    $deleteId = (int)$_POST['delete_id'];
+    $username = $_POST['username'];
 
-    if (isset($_SESSION['sinhvien'][$deleteId])) {
-        unset($_SESSION['sinhvien'][$deleteId]);
-    }
+    $sql = "DELETE FROM ClubMember WHERE username = :username";
+
+    $stmt = $db->prepare($sql);
+
+    $stmt->execute([
+        ':username' => $username
+    ]);
 
     header("Location: sinhvien.php");
     exit;
@@ -90,66 +78,60 @@ if (isset($_POST['delete'])) {
 
 if (isset($_POST['update'])) {
 
-    $updateId = (int)$_POST['update_id'];
+    $username = $_POST['username'];
+    $ban = $_POST['ban'];
+    $position = $_POST['position'];
+    $status = $_POST['status'];
 
-    if (isset($_SESSION['sinhvien'][$updateId])) {
+    $sql = "
+        UPDATE ClubMember
+        SET 
+            ban = :ban,
+            position = :position,
+            status = :status
+        WHERE username = :username
+    ";
 
-        $_SESSION['sinhvien'][$updateId]['ban'] =
-            $_POST['ban'];
+    $stmt = $db->prepare($sql);
 
-        $_SESSION['sinhvien'][$updateId]['chucvu'] =
-            $_POST['chucvu'];
+    $stmt->execute([
+        ':ban' => $ban,
+        ':position' => $position,
+        ':status' => $status,
+        ':username' => $username
+    ]);
 
-        $_SESSION['sinhvien'][$updateId]['trangthai'] =
-            $_POST['trangthai'];
-    }
-
-    header("Location: sinhvien.php?id=" . $updateId);
+    header("Location: sinhvien.php?id=" . urlencode($_POST['student_code']));
     exit;
 }
 
 
 $keyword = $_GET['keyword'] ?? '';
 
-$danhSachSinhVien = [];
+$ketQuaTimKiem = [];
 
-foreach ($_SESSION['sinhvien'] as $studentId => $student) {
+foreach ($danhSachSinhVien as $student) {
 
     if (
         $keyword === '' ||
-        stripos($student['msv'], $keyword) !== false ||
-        stripos($student['hoten'], $keyword) !== false ||
-        stripos($student['lop'], $keyword) !== false
+        stripos($student['student_code'], $keyword) !== false ||
+        stripos($student['fullname'], $keyword) !== false ||
+        stripos($student['class'], $keyword) !== false
     ) {
-        $danhSachSinhVien[$studentId] = $student;
+        $ketQuaTimKiem[] = $student;
     }
 }
 
+$danhSachSinhVien = $ketQuaTimKiem;
 ?>
 
-<!DOCTYPE html>
-<html lang="vi">
+<?php require_once "../includes/headers.php"; ?>
 
-<head>
+<?php require_once "../includes/sidebar-admin.php"; ?>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Quản lý sinh viên CLB</title>
-
-    <link rel="stylesheet" href="style.css">
-
-</head>
-
-<body>
-
+<main class="main-content">
 
 <div class="container">
-
-    <!-- TIÊU ĐỀ -->
-
-    <h1>QUẢN LÝ SINH VIÊN</h1>
 
     <div class="line"></div>
 
@@ -213,10 +195,10 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
                 <?php $stt = 1; ?>
 
-                <?php foreach ($danhSachSinhVien as $studentId => $student): ?>
+                <?php foreach ($danhSachSinhVien as $student): ?>
 
-                    <tr
-                        class="<?= ($id === $studentId) ? 'selected' : '' ?>"
+                    <tr 
+                        class="<?= ($id === $student['student_code']) ? 'selected' : '' ?>" 
                     >
 
                         <td>
@@ -224,25 +206,25 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
                         </td>
 
                         <td>
-                            <a
-                                class="student-link"
-                                href="sinhvien.php?id=<?= $studentId ?>"
+                            <a 
+                                class="student-link" 
+                                href="sinhvien.php?id=<?= urlencode($student['student_code']) ?>"
                             >
-                                <?= htmlspecialchars($student['msv']) ?>
+                                <?= htmlspecialchars($student['student_code']) ?>
                             </a>
                         </td>
 
                         <td>
-                            <a
-                                class="student-link"
-                                href="sinhvien.php?id=<?= $studentId ?>"
+                            <a 
+                                class="student-link" 
+                                href="sinhvien.php?id=<?= urlencode($student['student_code']) ?>"
                             >
-                                <?= htmlspecialchars($student['hoten']) ?>
+                                <?= htmlspecialchars($student['fullname']) ?>
                             </a>
                         </td>
 
                         <td>
-                            <?= htmlspecialchars($student['lop']) ?>
+                            <?= htmlspecialchars($student['class']) ?>
                         </td>
 
                         <td>
@@ -250,18 +232,18 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
                         </td>
 
                         <td>
-                            <?= htmlspecialchars($student['chucvu']) ?>
+                            <?= htmlspecialchars($student['position']) ?>
                         </td>
 
                         <td>
 
-                            <?php if ($student['trangthai'] === 'Đang hoạt động'): ?>
+                            <?php if ($student['status'] === 'Đang hoạt động'): ?>
 
                                 <span class="status active">
                                     Đang hoạt động
                                 </span>
 
-                            <?php elseif ($student['trangthai'] === 'Tạm khóa'): ?>
+                            <?php elseif ($student['status'] === 'Tạm khóa'): ?>
 
                                 <span class="status locked">
                                     Tạm khóa
@@ -270,7 +252,7 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
                             <?php else: ?>
 
                                 <span class="status">
-                                    <?= htmlspecialchars($student['trangthai']) ?>
+                                    <?= htmlspecialchars($student['status']) ?>
                                 </span>
 
                             <?php endif; ?>
@@ -300,9 +282,9 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
     </div>
 
 
-    <?php if ($id > 0 && isset($_SESSION['sinhvien'][$id])): ?>
+    <?php if ($sinhVien !== null): ?>
 
-        <?php $student = $_SESSION['sinhvien'][$id]; ?>
+    <?php $student = $sinhVien; ?>
 
 
         <!-- THÔNG TIN SINH VIÊN ĐƯỢC CHỌN -->
@@ -318,22 +300,22 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
                 <div>
                     <strong>MSSV:</strong>
-                    <?= htmlspecialchars($student['msv']) ?>
+                    <?= htmlspecialchars($student['student_code']) ?>
                 </div>
 
                 <div>
                     <strong>Họ tên:</strong>
-                    <?= htmlspecialchars($student['hoten']) ?>
+                    <?= htmlspecialchars($student['fullname']) ?>
                 </div>
 
                 <div>
                     <strong>Lớp:</strong>
-                    <?= htmlspecialchars($student['lop']) ?>
+                    <?= htmlspecialchars($student['class']) ?>
                 </div>
 
                 <div>
                     <strong>Khoa:</strong>
-                    <?= htmlspecialchars($student['khoa']) ?>
+                    <?= htmlspecialchars($student['faculty']) ?>
                 </div>
 
                 <div>
@@ -343,7 +325,7 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
                 <div>
                     <strong>Số điện thoại:</strong>
-                    <?= htmlspecialchars($student['sdt']) ?>
+                    <?= htmlspecialchars($student['phone']) ?>
                 </div>
 
                 <div>
@@ -353,12 +335,12 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
                 <div>
                     <strong>Chức vụ:</strong>
-                    <?= htmlspecialchars($student['chucvu']) ?>
+                    <?= htmlspecialchars($student['position']) ?>
                 </div>
 
                 <div>
                     <strong>Trạng thái:</strong>
-                    <?= htmlspecialchars($student['trangthai']) ?>
+                    <?= htmlspecialchars($student['status']) ?>
                 </div>
 
             </div>
@@ -378,10 +360,10 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
                 <form method="POST" class="delete-form">
 
-                    <input
-                        type="hidden"
-                        name="delete_id"
-                        value="<?= $id ?>"
+                    <input 
+                        type="hidden" 
+                        name="username" 
+                        value="<?= htmlspecialchars($student['username']) ?>"
                     >
 
                     <button
@@ -416,10 +398,14 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
                     <input
                         type="hidden"
-                        name="update_id"
-                        value="<?= $id ?>"
+                        name="username"
+                        value="<?= htmlspecialchars($student['username']) ?>"
                     >
-
+                    <input 
+                        type="hidden" 
+                        name="student_code" 
+                        value="<?= htmlspecialchars($student['student_code']) ?>"
+                    >
 
                     <div class="form-row">
 
@@ -427,7 +413,7 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
                         <input
                             type="text"
-                            value="<?= htmlspecialchars($student['msv']) ?>"
+                            value="<?= htmlspecialchars($student['student_code']) ?>"
                             readonly
                         >
 
@@ -440,7 +426,7 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
                         <input
                             type="text"
-                            value="<?= htmlspecialchars($student['hoten']) ?>"
+                            value="<?= htmlspecialchars($student['fullname']) ?>"
                             readonly
                         >
 
@@ -490,46 +476,46 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
                         <label>Chức vụ</label>
 
-                        <select name="chucvu">
+                        <select name="position">
 
                             <option
                                 value="Thành viên"
-                                <?= $student['chucvu'] === 'Thành viên' ? 'selected' : '' ?>
+                                <?= $student['position'] === 'Thành viên' ? 'selected' : '' ?>
                             >
                                 Thành viên
                             </option>
 
                             <option
                                 value="Cộng tác viên"
-                                <?= $student['chucvu'] === 'Cộng tác viên' ? 'selected' : '' ?>
+                                <?= $student['position'] === 'Cộng tác viên' ? 'selected' : '' ?>
                             >
                                 Cộng tác viên
                             </option>
 
                             <option
                                 value="Trưởng ban"
-                                <?= $student['chucvu'] === 'Trưởng ban' ? 'selected' : '' ?>
+                                <?= $student['position'] === 'Trưởng ban' ? 'selected' : '' ?>
                             >
                                 Trưởng ban
                             </option>
 
                             <option
                                 value="Phó ban"
-                                <?= $student['chucvu'] === 'Phó ban' ? 'selected' : '' ?>
+                                <?= $student['position'] === 'Phó ban' ? 'selected' : '' ?>
                             >
                                 Phó ban
                             </option>
 
                             <option
                                 value="Chủ nhiệm"
-                                <?= $student['chucvu'] === 'Chủ nhiệm' ? 'selected' : '' ?>
+                                <?= $student['position'] === 'Chủ nhiệm' ? 'selected' : '' ?>
                             >
                                 Chủ nhiệm
                             </option>
 
                             <option
                                 value="Phó chủ nhiệm"
-                                <?= $student['chucvu'] === 'Phó chủ nhiệm' ? 'selected' : '' ?>
+                                <?= $student['position'] === 'Phó chủ nhiệm' ? 'selected' : '' ?>
                             >
                                 Phó chủ nhiệm
                             </option>
@@ -543,18 +529,18 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
                         <label>Trạng thái</label>
 
-                        <select name="trangthai">
+                        <select name="status">
 
                             <option
                                 value="Đang hoạt động"
-                                <?= $student['trangthai'] === 'Đang hoạt động' ? 'selected' : '' ?>
+                                <?= $student['status'] === 'Đang hoạt động' ? 'selected' : '' ?>
                             >
                                 Đang hoạt động
                             </option>
 
                             <option
                                 value="Tạm khóa"
-                                <?= $student['trangthai'] === 'Tạm khóa' ? 'selected' : '' ?>
+                                <?= $student['status'] === 'Tạm khóa' ? 'selected' : '' ?>
                             >
                                 Tạm khóa
                             </option>
@@ -595,5 +581,6 @@ foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
 </div>
 
-</body>
-</html>
+</main>
+
+<?php require_once "../includes/footer.php"; ?>
