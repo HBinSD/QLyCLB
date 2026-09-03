@@ -22,7 +22,7 @@ class OrganizerModel {
     }
 
     // Lấy danh sách thành viên trong CLB
-    public function getMembersByClubId(int $clubId): array {
+    public function getMembersByClubId(string $clubId): array {
         $sql = "SELECT cm.username, cm.club_id, cm.joined_at, cm.position, cm.status,
                        us.fullname, us.email, us.phone
                 FROM clubmember AS cm

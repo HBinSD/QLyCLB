@@ -52,7 +52,7 @@ class OrganizerController {
         $members = [];
         if (!empty($club) && isset($club['club_id'])) {
             // Chỉ gọi truy vấn lấy thành viên khi tìm thấy CLB
-            $members = $this->organizerModel->getMembersByClubId((int)$club['club_id']);
+            $members = $this->organizerModel->getMembersByClubId((string)$club['club_id']);
         }
 
         require_once __DIR__ . '/../views/organizer_club_members.php';
