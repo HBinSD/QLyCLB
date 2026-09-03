@@ -23,7 +23,8 @@ if (
     ($user['role'] ?? '') !== 'organizer'
     && ($user['role'] ?? '') !== 'admin'
 ) {
-    header("Location: ../index.php");
+    http_response_code(403);
+    echo 'Bạn không có quyền truy cập';
     exit;
 }
 
