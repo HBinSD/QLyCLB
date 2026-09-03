@@ -1,15 +1,38 @@
 <?php
-// 1. Bật Session toàn hệ thống
 session_start();
-
-// 2. Nạp kết nối CSDL dùng chung
 require_once __DIR__ . '/../core/Database.php';
 
-// 3. Nhận tham số page từ URL, mặc định là 'login'
-$page = $_GET['page'] ?? 'login';
+// 1. Mặc định nếu không truyền ?page= trên URL thì trang chủ là 'home'
+$page = $_GET['page'] ?? 'home';
 
-// 4. Bộ điều hướng (Router)
 switch ($page) {
+
+    // ========================================
+    // TRANG CHỦ HỆ THỐNG (HOME / DASHBOARD)
+    // ========================================
+    case 'home':
+        if (isset($_SESSION['user'])) {
+            require_once __DIR__ . '/../app/controllers/DashboardController.php';
+            $dashboard = new DashboardController();
+            
+            // Điều hướng theo Role người dùng
+            switch ($_SESSION['user']['role']) {
+                case 'admin':
+                    $dashboard->admin();
+                    break;
+                case 'organizer':
+                    $dashboard->organizer();
+                    break;
+                case 'member':
+                default:
+                    $dashboard->member();
+                    break;
+            }
+        } else {
+            header('Location: index.php?page=login');
+            exit();
+        }
+        break;
 
     // ========================================
     // CHỨC NĂNG XÁC THỰC (AUTH)
@@ -37,26 +60,50 @@ switch ($page) {
         (new Event_Controller())->index();
         break;
 
-    // ========================================
-    // DASHBOARD (ĐÃ BỎ CHECK ROLE)
-    // ========================================
-    case 'admin-dashboard':
-        $fullname = $_SESSION['user']['fullname'] ?? 'Admin';
-        echo "<h2>Chào mừng Admin: " . htmlspecialchars($fullname) . "</h2>";
-        echo "<a href='index.php?page=event'>Quản lý sự kiện</a> | <a href='index.php?page=logout'>Đăng xuất</a>";
+    case 'event-create':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->create();
         break;
 
-    case 'organizer-dashboard':
-        echo "<h2>Trang Ban Tổ Chức (Organizer)</h2>";
-        echo "<a href='index.php?page=event'>Quản lý sự kiện</a> | <a href='index.php?page=logout'>Đăng xuất</a>";
+    case 'event-edit':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->edit();
+        break;
+
+    case 'event-delete':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->delete();
         break;
 
     // ========================================
-    // MẶC ĐỊNH / ERROR 404
+    // HỒ SƠ CÁ NHÂN (PROFILE)
+    // ========================================
+    case 'profile':
+        require_once __DIR__ . '/../app/controllers/UserController.php';
+        (new UserController())->profile();
+        break;
+
+    case 'edit-profile':
+        require_once __DIR__ . '/../app/controllers/UserController.php';
+        (new UserController())->editProfile();
+        break;
+    case 'club':
+        require_once __DIR__ . '/../app/controllers/ClubController.php';
+        (new ClubController())->index();
+        break;
+
+    case 'club-member':
+        require_once __DIR__ . '/../app/controllers/ClubController.php';
+        (new ClubController())->members();
+        break;
+
+    // ========================================
+    // MẶC ĐỊNH CHUYỂN VỀ TRANG CHỦ
     // ========================================
     default:
-        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
-        (new Event_Controller())->index();
+        header('Location: index.php?page=home');
+        exit();
         break;
+        
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../models/UserModel.php';
+require_once __DIR__ . '/../models/userModel.php';
 
 class AuthController {
     private UserModel $userModel;
@@ -8,8 +8,7 @@ class AuthController {
         $this->userModel = new UserModel();
     }
 
-    // Hàm điều hướng theo Role chuẩn mẫu của bạn
-    private function redirectByRole(string $role) {
+    private function redirectByRole(string $role): void {
         switch ($role) {
             case 'admin':
                 header("Location: index.php?page=admin-dashboard");
@@ -18,21 +17,21 @@ class AuthController {
                 header("Location: index.php?page=organizer-dashboard");
                 exit;
             case 'member':
+            case 'USER':
                 header("Location: index.php?page=event");
                 exit;
             default:
-                return "Role của tài khoản không hợp lệ.";
+                header("Location: index.php?page=login");
+                exit;
         }
     }
 
-    public function login() {
-        // Kiểm tra nếu đã đăng nhập thì chuyển trang luôn
+    public function login(): void {
         if (isset($_SESSION['user'])) {
             $this->redirectByRole($_SESSION['user']['role']);
         }
 
         $error = "";
-
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $username = trim($_POST["username"] ?? "");
             $password = $_POST["password"] ?? "";
@@ -43,26 +42,26 @@ class AuthController {
                 $error = "Username không hợp lệ.";
             } else {
                 $user = $this->userModel->getUserByUsernameOrEmail($username);
-
                 if (!$user) {
                     $error = "Username hoặc mật khẩu không chính xác.";
-                } elseif (isset($user['status']) && $user['status'] !== '1') {
-                    $error = "Tài khoản của bạn không tồn tại hoặc đã bị khóa.";
+                } elseif (isset($user['status']) && (int)$user['status'] !== 1) {
+                    $error = "Tài khoản của bạn đã bị khóa hoặc không tồn tại.";
                 } else {
                     if (password_verify($password, $user['password'])) {
-                        // Lưu Session đúng chuẩn cấu trúc mẫu
+                        session_regenerate_id(true);
                         $_SESSION['user'] = [
                             'username'  => $user['username'],
                             'fullname'  => $user['fullname'] ?? '',
                             'email'     => $user['email'] ?? '',
-                            'DOB'       => $user['DOB'] ?? '',
+                            'DOB'       => $user['dob'] ?? '',
                             'phone'     => $user['phone'] ?? '',
                             'id_number' => $user['id_number'] ?? '',
-                            'role'      => $user['role']
+                            'gender'    => $user['gender'] ?? '',
+                            'role'      => $user['role'],
+                            'ngayTao'   => $user['created_at'] ?? '',
+                            'avatar'    => $user['avt_links'] ?? '',
                         ];
-
-                        $redirectError = $this->redirectByRole($user['role']);
-                        if ($redirectError) $error = $redirectError;
+                        $this->redirectByRole($user['role']);
                     } else {
                         $error = "Username hoặc mật khẩu không chính xác.";
                     }
@@ -72,39 +71,38 @@ class AuthController {
         require_once __DIR__ . '/../views/login.php';
     }
 
-    public function register() {
+    public function register(): void {
         $error = "";
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $username = trim($_POST["username"] ?? "");
             $password = $_POST["password"] ?? "";
             $fullname = trim($_POST["fullname"] ?? "");
             $email    = trim($_POST["email"] ?? "");
-            $dob      = $_POST["dob"] ?? null;
             $phone    = trim($_POST["phone"] ?? null);
             $idNumber = trim($_POST["id_number"] ?? null);
+            $gender   = trim($_POST["gender"] ?? "");
+            $dob      = trim($_POST["dob"] ?? null);
 
             if ($username === "" || $password === "" || $fullname === "" || $email === "") {
-                $error = "Vui lòng điền đầy đủ các thông tin bắt buộc.";
-            } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
-                $error = "Username chỉ gồm chữ cái, số và dấu gạch dưới.";
+                $error = "Vui lòng điền các thông tin bắt buộc.";
             } else {
-                $success = $this->userModel->register($username, $password, $fullname, $email, $dob, $phone, $idNumber);
+                $success = $this->userModel->register($username, $password, $fullname, $email, $phone, $idNumber, $gender, $dob, 'member');
                 if ($success) {
                     header("Location: index.php?page=login");
                     exit;
                 } else {
-                    $error = "Username đã tồn tại hoặc có lỗi đăng ký.";
+                    $error = "Đăng ký thất bại, tài khoản hoặc email đã tồn tại.";
                 }
             }
         }
         require_once __DIR__ . '/../views/register.php';
     }
 
-    public function logout() {
+    public function logout(): void {
         unset($_SESSION['user']);
         session_destroy();
         header("Location: index.php?page=login");
         exit;
     }
+    
 }
-?>

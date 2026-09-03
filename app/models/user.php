@@ -27,4 +27,4 @@ class User {
     public function getPhone()    { return $this->phone; }
     public function getIdNumber() { return $this->idNumber; }
 }
-?>
+?>2

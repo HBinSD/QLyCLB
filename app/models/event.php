@@ -9,6 +9,7 @@
             private string $location,
             private string $status
         ) {}
+        
 
         // --- GETTERS ---
 
