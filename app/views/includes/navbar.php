@@ -413,7 +413,7 @@
                 </div>
 
 
-                <a href="../member/profile.php">
+                <a href="index.php?page=profile">
 
                     <span class="menu-icon">
                         👤

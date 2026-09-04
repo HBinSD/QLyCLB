@@ -1,11 +1,11 @@
 <?php 
 $pageTitle = "Thêm Sự Kiện Mới";
-require_once __DIR__ . '/includes/headers.php'; 
+require_once __DIR__ . '/../includes/headers.php';
 ?>
 
 <div style="background: white; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; max-width: 800px; margin: 0 auto;">
     <h2 style="color: #1e3a5f; margin-top: 0; margin-bottom: 20px; font-size: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
-         THÊM SỰ KIỆN MỚI
+        THÊM SỰ KIỆN MỚI
     </h2>
 
     <?php if (!empty($error)): ?>
@@ -27,8 +27,20 @@ require_once __DIR__ . '/includes/headers.php';
             </div>
 
             <div>
-                <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #334155;">Thời Gian Tổ Chức (*)</label>
-                <input type="datetime-local" name="event_date" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
+                <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #334155;">Ngày Tổ Chức (*)</label>
+                <input type="date" name="event_date" value="<?= isset($event) ? $event->getEventDate()->format('Y-m-d') : '' ?>" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
+            </div>
+
+            <!-- CHỈ CHỌN GIỜ BẮT ĐẦU VÀ KẾT THÚC -->
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #334155;">Giờ Bắt Đầu (*)</label>
+                    <input type="time" name="start_time" value="<?= isset($event) && $event->getStartTime() ? $event->getStartTime()->format('H:i') : '' ?>" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
+                </div>
+                <div style="flex: 1;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #334155;">Giờ Kết Thúc (*)</label>
+                    <input type="time" name="end_time" value="<?= isset($event) && $event->getEndTime() ? $event->getEndTime()->format('H:i') : '' ?>" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
+                </div>
             </div>
 
             <div>
@@ -61,4 +73,4 @@ require_once __DIR__ . '/includes/headers.php';
     </form>
 </div>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

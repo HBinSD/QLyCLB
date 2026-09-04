@@ -2,19 +2,13 @@
 session_start(); 
 require_once __DIR__ . '/../core/Database.php'; 
 
-// 1. Mặc định nếu không truyền ?page= trên URL thì vào trang chủ 'home' 
 $page = $_GET['page'] ?? 'home'; 
 
 switch ($page) { 
-    // ======================================== 
-    // TRANG CHỦ / DASHBOARD
-    // ======================================== 
     case 'home': 
         if (isset($_SESSION['user'])) { 
             require_once __DIR__ . '/../app/controllers/DashboardController.php'; 
             $dashboard = new DashboardController(); 
-                         
-            // Chuyển hướng theo Role người dùng
             switch ($_SESSION['user']['role']) { 
                 case 'admin': 
                     $dashboard->admin(); 
@@ -33,9 +27,6 @@ switch ($page) {
         } 
         break; 
 
-    // ======================================== 
-    // CHỨC NĂNG XÁC THỰC (AUTH)
-    // ======================================== 
     case 'login': 
         require_once __DIR__ . '/../app/controllers/AuthController.php'; 
         (new AuthController())->login(); 
@@ -51,32 +42,52 @@ switch ($page) {
         (new AuthController())->logout(); 
         break; 
 
-    // ======================================== 
     // QUẢN LÝ SỰ KIỆN (EVENT)
-    // ======================================== 
     case 'event': 
         require_once __DIR__ . '/../app/controllers/Event_Controller.php'; 
         (new Event_Controller())->index(); 
         break; 
 
-    case 'event-create': 
-        require_once __DIR__ . '/../app/controllers/Event_Controller.php'; 
-        (new Event_Controller())->create(); 
-        break; 
+    case 'event-create':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->create();
+        break;
 
-    case 'event-edit': 
-        require_once __DIR__ . '/../app/controllers/Event_Controller.php'; 
-        (new Event_Controller())->edit(); 
-        break; 
+    case 'event-edit':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->edit();
+        break;
 
-    case 'event-delete': 
-        require_once __DIR__ . '/../app/controllers/Event_Controller.php'; 
-        (new Event_Controller())->delete(); 
-        break; 
+    case 'event-delete':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->delete();
+        break;
 
-    // ======================================== 
-    // THÔNG TIN CÁ NHÂN & DÀNH CHO THÀNH VIÊN
-    // ======================================== 
+    case 'event-register':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->register();
+        break;
+
+    case 'event-cancel':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->cancelRegistration();
+        break;
+
+    case 'event-registered':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->registeredEvents();
+        break;
+
+    case 'event-export-csv':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->exportRegisteredCSV();
+        break;
+    case 'event-participants':
+        require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+        (new Event_Controller())->participants();
+        break;
+
+    // THÔNG TIN CÁ NHÂN & CLB
     case 'profile': 
         require_once __DIR__ . '/../app/controllers/UserController.php'; 
         (new UserController())->profile(); 
@@ -97,9 +108,7 @@ switch ($page) {
         (new ClubController())->members(); 
         break; 
 
-    // ======================================== 
-    // DÀNH RIÊNG CHO BAN TỔ CHỨC (ORGANIZER)
-    // ======================================== 
+    // ORGANIZER
     case 'my-club': 
         require_once __DIR__ . '/../app/controllers/OrganizerController.php'; 
         (new OrganizerController())->myClub(); 
@@ -124,10 +133,16 @@ switch ($page) {
         require_once __DIR__ . '/../app/controllers/OrganizerController.php'; 
         (new OrganizerController())->deleteMember(); 
         break; 
+    case 'attendance':
+    require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+    (new Event_Controller())->attendance();
+    break;
 
-    // ======================================== 
-    // MẶC ĐỊNH CHUYỂN VỀ TRANG CHỦ
-    // ======================================== 
+    case 'api-attendance':
+    require_once __DIR__ . '/../app/controllers/Event_Controller.php';
+    (new Event_Controller())->apiAttendance();
+    break;
+    
     default: 
         header('Location: index.php?page=home'); 
         exit(); 

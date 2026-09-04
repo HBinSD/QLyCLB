@@ -43,15 +43,15 @@ class OrganizerModel {
     }
 
     // Kiểm tra xem người dùng đã ở trong CLB chưa
-    public function isMemberInClub(int $clubId, string $username): bool {
+    public function isMemberInClub(string $clubId, string $username): bool {
         $sql = "SELECT COUNT(*) FROM clubmember WHERE club_id = :club_id AND username = :username";
         $stm = $this->pdo->prepare($sql);
         $stm->execute([':club_id' => $clubId, ':username' => $username]);
         return $stm->fetchColumn() > 0;
     }
-
+    
     // Thêm thành viên mới vào CLB
-    public function addMember(int $clubId, string $username, string $position, int $status): bool {
+    public function addMember(string $clubId, string $username, string $position, int $status): bool {
         $sql = "INSERT INTO clubmember (club_id, username, position, status, joined_at) 
                 VALUES (:club_id, :username, :position, :status, NOW())";
         $stm = $this->pdo->prepare($sql);
@@ -91,7 +91,7 @@ class OrganizerModel {
     }
 
     // Xóa thành viên khỏi CLB
-    public function deleteMember(int $clubId, string $username): bool {
+    public function deleteMember(string $clubId, string $username): bool {
         $sql = "DELETE FROM clubmember WHERE club_id = :club_id AND username = :username";
         $stm = $this->pdo->prepare($sql);
         return $stm->execute([

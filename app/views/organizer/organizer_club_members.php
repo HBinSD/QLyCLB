@@ -1,19 +1,19 @@
 <?php 
 $pageTitle = "Danh Sách Thành Viên CLB";
-require_once __DIR__ . '/includes/headers.php'; 
+require_once __DIR__ . '/../includes/headers.php';
 ?>
 
 <div style="display: flex; flex-direction: column; gap: 20px;">
 
-    <!-- THÔNG BÁO -->
+    <!-- THÔNG BÁO FLASH -->
     <?php if (!empty($successMessage)): ?>
-        <div style="background: #dcfce7; color: #166534; padding: 14px 20px; border-radius: 8px; font-weight: bold;">
+        <div style="background: #dcfce7; color: #166534; padding: 14px 20px; border-radius: 8px; font-weight: bold; border: 1px solid #86efac;">
             <?= htmlspecialchars($successMessage) ?>
         </div>
     <?php endif; ?>
 
     <?php if (!empty($errorMessage)): ?>
-        <div style="background: #fee2e2; color: #dc2626; padding: 14px 20px; border-radius: 8px; font-weight: bold;">
+        <div style="background: #fee2e2; color: #dc2626; padding: 14px 20px; border-radius: 8px; font-weight: bold; border: 1px solid #fca5a5;">
             <?= htmlspecialchars($errorMessage) ?>
         </div>
     <?php endif; ?>
@@ -22,10 +22,10 @@ require_once __DIR__ . '/includes/headers.php';
     <div style="background: white; padding: 20px 25px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
         <div>
             <h2 style="color: #1e3a5f; margin: 0; font-size: 20px;">DANH SÁCH THÀNH VIÊN CLB</h2>
-            <p style="color: #64748b; margin: 4px 0 0 0; font-size: 13px;">Quản lý thành viên, vai trò và trạng thái hoạt động</p>
+            <p style="color: #64748b; margin: 4px 0 0 0; font-size: 13px;">Quản lý danh sách thành viên trong câu lạc bộ</p>
         </div>
         <a href="index.php?page=club-member-add" style="background: #1e3a5f; color: white; padding: 10px 18px; border-radius: 8px; font-weight: bold; text-decoration: none;">
-             Thêm Thành Viên
+            + Thêm Thành Viên
         </a>
     </div>
 
@@ -38,10 +38,10 @@ require_once __DIR__ . '/includes/headers.php';
                     <th style="padding: 12px;">Họ Và Tên</th>
                     <th style="padding: 12px;">Username</th>
                     <th style="padding: 12px;">Email</th>
-                    <th style="padding: 12px;">Vai Trò / Chức Vụ</th>
+                    <th style="padding: 12px;">Chức Vụ</th>
                     <th style="padding: 12px;">Ngày Tham Gia</th>
                     <th style="padding: 12px;">Trạng Thái</th>
-                    <th style="padding: 12px; text-align: center;">Hành Động</th>
+                    <th style="padding: 12px; text-align: center;">Thao Tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,13 +59,14 @@ require_once __DIR__ . '/includes/headers.php';
                         <td style="padding: 12px; color: #64748b;"><?= date('d/m/Y', strtotime($m['joined_at'])) ?></td>
                         <td style="padding: 12px;">
                             <?= (int)$m['status'] === 1 
-                                ? '<span style="color: green; font-weight: bold;">● Hoạt động</span>' 
-                                : '<span style="color: red; font-weight: bold;">● Tạm ngưng</span>'; 
+                                ? '<span style="color: green; font-weight: bold;">Hoạt động</span>' 
+                                : '<span style="color: red; font-weight: bold;">Tạm ngưng</span>'; 
                             ?>
                         </td>
                         <td style="padding: 12px; text-align: center;">
-                            <a href="index.php?page=club-member-edit&username=<?= urlencode($m['username']) ?>" style="color: #2563eb; font-weight: bold; text-decoration: none; margin-right: 8px;">Sửa</a> | 
-                            <a href="index.php?page=club-member-delete&username=<?= urlencode($m['username']) ?>" onclick="return confirm('Bạn có chắc muốn xóa thành viên này khỏi CLB?')" style="color: #ef4444; font-weight: bold; text-decoration: none; margin-left: 8px;">Xóa</a>
+                            <a href="index.php?page=club-member-delete&username=<?= urlencode($m['username']) ?>" 
+                               onclick="return confirm('Bạn có chắc chắn muốn xóa thành viên <?= htmlspecialchars($m['username']) ?> khỏi CLB?')" 
+                               style="color: #ef4444; font-weight: bold; text-decoration: none;">Xóa</a>
                         </td>
                     </tr>
                 <?php endforeach; else: ?>
@@ -79,4 +80,4 @@ require_once __DIR__ . '/includes/headers.php';
 
 </div>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php';?>

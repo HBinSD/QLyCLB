@@ -1,6 +1,6 @@
 <?php 
 $pageTitle = "Chỉnh Sửa Thông Tin Cá Nhân";
-require_once __DIR__ . '/includes/headers.php'; 
+require_once __DIR__ . '/../includes/headers.php';
 ?>
 
 <div class="profile-page" style="background: white; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; max-width: 800px; margin: 0 auto;">
@@ -71,4 +71,4 @@ require_once __DIR__ . '/includes/headers.php';
     </form>
 </div>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

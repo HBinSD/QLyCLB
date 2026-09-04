@@ -5,7 +5,7 @@ $pageTitle = "Danh Sách Thành Viên CLB";
 $clubInfo = $clubInfo ?? null;
 $members  = $members ?? [];
 
-require_once __DIR__ . '/includes/headers.php'; 
+require_once __DIR__ . '/../includes/headers.php';
 ?>
 
 <link rel="stylesheet" href="css/club.css">
@@ -88,4 +88,4 @@ require_once __DIR__ . '/includes/headers.php';
     </main>
 </div>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php';?>

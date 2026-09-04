@@ -1,0 +1,149 @@
+/* Layout chính trang CLB */
+.club-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.club-sidebar {
+    width: 240px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    flex-shrink: 0;
+}
+
+.club-sidebar-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 12px;
+}
+
+.club-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.club-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    color: #334155;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.club-menu-item:hover {
+    background: #eff6ff;
+    color: #1e40af;
+}
+
+.club-menu-item.active {
+    background: #1e3a5f;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* Nội dung thông tin CLB */
+.club-content {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 28px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.club-intro h2 {
+    color: #1e3a5f;
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #cbd5e1;
+}
+
+.club-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.club-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 16px;
+    border-radius: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.club-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.club-card.full {
+    grid-column: 1 / -1;
+}
+
+.club-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.club-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1e3a5f;
+}
+
+.club-value.normal {
+    font-size: 14px;
+    font-weight: 400;
+    color: #334155;
+    line-height: 1.6;
+}
+
+.club-status.active {
+    display: inline-block;
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.club-status.inactive {
+    display: inline-block;
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .club-layout {
+        flex-direction: column;
+    }
+    .club-sidebar {
+        width: 100%;
+    }
+}

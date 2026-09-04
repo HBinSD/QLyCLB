@@ -18,7 +18,7 @@ class AuthController {
                 exit;
             case 'member':
             case 'USER':
-                header("Location: index.php?page=event");
+                header("Location: index.php?page=home");
                 exit;
             default:
                 header("Location: index.php?page=login");

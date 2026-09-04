@@ -34,7 +34,7 @@ class OrganizerController {
         // Lấy thông tin CLB từ Model
         $club = $this->organizerModel->getClubByOrganizer($username);
 
-        require_once __DIR__ . '/../views/organizer_my_club.php';
+        require_once __DIR__ . '/../views/organizer/organizer_my_club.php';
     }
 
     // 2. Xem danh sách thành viên trong CLB
@@ -55,7 +55,7 @@ class OrganizerController {
             $members = $this->organizerModel->getMembersByClubId((string)$club['club_id']);
         }
 
-        require_once __DIR__ . '/../views/organizer_club_members.php';
+        require_once __DIR__ . '/../views/organizer/organizer_club_members.php';
     }
 
     // 3. Trang thêm thành viên mới
@@ -75,11 +75,11 @@ class OrganizerController {
                 $error = "Vui lòng nhập Username thành viên!";
             } elseif (!$this->organizerModel->checkUserExists($memberUsername)) {
                 $error = "Tài khoản '$memberUsername' không tồn tại trên hệ thống!";
-            } elseif ($this->organizerModel->isMemberInClub((int)$club['club_id'], $memberUsername)) {
+            } elseif ($this->organizerModel->isMemberInClub((string)$club['club_id'], $memberUsername)) {
                 $error = "Tài khoản '$memberUsername' đã là thành viên của CLB rồi!";
             } else {
-                if ($this->organizerModel->addMember((int)$club['club_id'], $memberUsername, $position, $status)) {
-                    $_SESSION['flash_success'] = "🎉 Thêm thành viên mới thành công!";
+                if ($this->organizerModel->addMember((string)$club['club_id'], $memberUsername, $position, $status)) {
+                    $_SESSION['flash_success'] = " Thêm thành viên mới thành công!";
                     header('Location: index.php?page=club-members');
                     exit();
                 } else {
@@ -88,7 +88,7 @@ class OrganizerController {
             }
         }
 
-        require_once __DIR__ . '/../views/organizer_member_add.php';
+        require_once __DIR__ . '/../views/organizer/organizer_member_add.php';
     }
 
     // 4. Trang chỉnh sửa vai trò / trạng thái
@@ -111,7 +111,7 @@ class OrganizerController {
             $status   = (int)($_POST['status'] ?? 1);
 
             if ($this->organizerModel->updateMember((int)$club['club_id'], $targetUsername, $position, $status)) {
-                $_SESSION['flash_success'] = "🎉 Cập nhật thông tin thành viên thành công!";
+                $_SESSION['flash_success'] = " Cập nhật thông tin thành viên thành công!";
                 header('Location: index.php?page=club-members');
                 exit();
             } else {
@@ -119,7 +119,7 @@ class OrganizerController {
             }
         }
 
-        require_once __DIR__ . '/../views/organizer_member_edit.php';
+        require_once __DIR__ . '/../views/organizer/organizer_member_edit.php';
     }
 
     // 5. Xóa thành viên khỏi CLB
@@ -130,7 +130,7 @@ class OrganizerController {
         $targetUsername = $_GET['username'] ?? '';
 
         if ($club && !empty($targetUsername)) {
-            if ($this->organizerModel->deleteMember((int)$club['club_id'], $targetUsername)) {
+            if ($this->organizerModel->deleteMember((string)$club['club_id'], $targetUsername)) {
                 $_SESSION['flash_success'] = "Đã xóa thành viên khỏi CLB!";
             } else {
                 $_SESSION['flash_error'] = "Không thể xóa thành viên này!";

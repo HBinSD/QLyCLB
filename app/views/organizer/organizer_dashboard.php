@@ -1,6 +1,6 @@
 <?php 
 $pageTitle = "Trang Chủ Ban Tổ Chức";
-require_once __DIR__ . '/includes/headers.php'; 
+require_once __DIR__ . '/../includes/headers.php';
 ?>
 
 <div class="dashboard-content">
@@ -21,4 +21,4 @@ require_once __DIR__ . '/includes/headers.php';
     </div>
 </div>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

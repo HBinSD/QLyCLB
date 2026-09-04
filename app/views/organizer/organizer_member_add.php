@@ -1,11 +1,11 @@
 <?php 
 $pageTitle = "Thêm Thành Viên Vào CLB";
-require_once __DIR__ . '/includes/headers.php'; 
+require_once __DIR__ . '/../includes/headers.php';
 ?>
 
 <div style="background: white; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; max-width: 600px; margin: 0 auto;">
     <h2 style="color: #1e3a5f; margin-top: 0; margin-bottom: 20px; font-size: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
-         THÊM THÀNH VIÊN VÀO CLB
+        THÊM THÀNH VIÊN VÀO CLB
     </h2>
 
     <?php if (!empty($error)): ?>
@@ -19,12 +19,15 @@ require_once __DIR__ . '/includes/headers.php';
             <div>
                 <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #334155;">Username / Tên Đăng Nhập (*)</label>
                 <input type="text" name="username" placeholder="Nhập username của sinh viên..." required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
-                <small style="color: #64748b; margin-top: 4px; display: block;">Tài khoản phải tồn tại trong hệ thống trước khi thêm vào CLB.</small>
+                <small style="color: #64748b; margin-top: 4px; display: block;">Tài khoản sinh viên phải có sẵn trên hệ thống trước khi thêm vào CLB.</small>
             </div>
 
             <div>
                 <label style="display: block; font-weight: bold; margin-bottom: 6px; color: #334155;">Vai Trò / Chức Vụ (*)</label>
-                <input type="text" name="position" value="Thành viên" placeholder="VD: Trưởng ban Truyền thông, Thành viên..." required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box;">
+                <select name="position" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; background: white;">
+                    <option value="Thành viên" selected>Thành viên</option>
+                    <option value="Chủ nhiệm">Chủ nhiệm</option>
+                </select>
             </div>
 
             <div>
@@ -47,4 +50,4 @@ require_once __DIR__ . '/includes/headers.php';
     </form>
 </div>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

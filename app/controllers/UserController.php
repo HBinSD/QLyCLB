@@ -14,7 +14,7 @@ class UserController {
             exit();
         }
         $user = $this->userModel->getUserByUsernameOrEmail($_SESSION['user']['username']);
-        require_once __DIR__ . '/../views/profile.php';
+        require_once __DIR__ . '/../views/member/profile.php';
     }
 
     public function editProfile() {
@@ -92,7 +92,7 @@ class UserController {
             }
         }
 
-        require_once __DIR__ . '/../views/edit_profile.php';
+        require_once __DIR__ . '/../views/member/edit_profile.php';
     }
 }
 ?>

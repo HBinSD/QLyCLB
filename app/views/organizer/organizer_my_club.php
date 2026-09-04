@@ -1,6 +1,6 @@
 <?php 
 $pageTitle = "Câu Lạc Bộ Của Tôi";
-require_once __DIR__ . '/includes/headers.php'; 
+require_once __DIR__ . '/../includes/headers.php';
 
 $createdAt = (!empty($club) && !empty($club['created_at'])) 
     ? date('d/m/Y', strtotime($club['created_at'])) 
@@ -65,4 +65,4 @@ $createdAt = (!empty($club) && !empty($club['created_at']))
     <?php endif; ?>
 </div>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>

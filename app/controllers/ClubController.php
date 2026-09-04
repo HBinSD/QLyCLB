@@ -16,7 +16,7 @@ class ClubController {
         }
         $user = $_SESSION['user'];
         $club = $this->clubModel->getClubByUsername($user['username']);
-        require_once __DIR__ . '/../views/club.php';
+        require_once __DIR__ . '/../views/member/club.php';
     }
 
     // 2. Xem Danh sách thành viên CLB
