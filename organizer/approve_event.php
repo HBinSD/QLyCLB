@@ -365,8 +365,7 @@ try {
     if ($db->inTransaction()) {
         $db->rollBack();
     }
-
-
+    
     header(
         "Location: event_registrations.php?error="
         . urlencode($e->getMessage())
