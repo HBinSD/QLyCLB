@@ -315,19 +315,12 @@ require_once "../includes/headers.php";
             <h1>
                 Xin chào,
                 <?= htmlspecialchars($organizer['fullname'] ?: $organizer['username']) ?>
-                👋
             </h1>
 
             <p>
-                Chào mừng bạn đến với bảng điều khiển Organizer.
                 Hãy kiểm tra hoạt động của câu lạc bộ hôm nay.
             </p>
         </div>
-
-        <a href="create_event.php" class="btn-primary">
-            + Tạo sự kiện
-        </a>
-
     </div>
 
 
@@ -771,7 +764,7 @@ require_once "../includes/headers.php";
             </a>
 
 
-            <a href="../members.php" class="quick-action">
+            <a href="club-members.php" class="quick-action">
 
                 <div class="quick-icon">
                     👥
