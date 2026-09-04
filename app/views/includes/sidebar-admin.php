@@ -16,6 +16,3 @@
 <a href="index.php?page=admin-settings" class="sidebar-item<?= sidebar_active('admin-settings') ?>">
     <span class="sidebar-text">Cài đặt</span>
 </a>
-<a href="index.php?page=profile" class="sidebar-item<?= sidebar_active('profile') ?>">
-    <span class="sidebar-text">Thông tin cá nhân</span>
-</a>

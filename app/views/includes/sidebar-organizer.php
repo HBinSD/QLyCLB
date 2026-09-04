@@ -16,6 +16,3 @@
 <a href="index.php?page=announcements" class="sidebar-item<?= sidebar_active('announcements') ?>">
     <span class="sidebar-text">Thông báo</span>
 </a>
-<a href="index.php?page=profile" class="sidebar-item<?= sidebar_active('profile') ?>">
-    <span class="sidebar-text">Thông tin cá nhân</span>
-</a>

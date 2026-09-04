@@ -142,7 +142,31 @@ switch ($page) {
     require_once __DIR__ . '/../app/controllers/Event_Controller.php';
     (new Event_Controller())->apiAttendance();
     break;
-    
+    // ADMIN ROUTES
+    case 'admin-dashboard':
+        require_once __DIR__ . '/../app/controllers/DashboardController.php';
+        (new DashboardController())->admin();
+        break;
+    case 'admin-members':
+        require_once __DIR__ . '/../app/controllers/AdminController.php';
+        (new AdminController())->members();
+        break;
+    case 'admin-clubs':
+        require_once __DIR__ . '/../app/controllers/AdminController.php';
+        (new AdminController())->clubs();
+        break;
+    case 'admin-club-create':
+        require_once __DIR__ . '/../app/controllers/AdminController.php';
+        (new AdminController())->createClub();
+        break;
+    case 'admin-club-delete':
+        require_once __DIR__ . '/../app/controllers/AdminController.php';
+        (new AdminController())->deleteClub();
+        break;
+    case 'admin-reports':
+        require_once __DIR__ . '/../app/controllers/AdminController.php';
+        (new AdminController())->reports();
+        break;
     default: 
         header('Location: index.php?page=home'); 
         exit(); 
