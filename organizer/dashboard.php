@@ -15,7 +15,8 @@ if (
     ($user['role'] ?? '') !== 'organizer' &&
     ($user['role'] ?? '') !== 'admin'
 ) {
-    header("Location: ../index.php");
+    http_response_code(403);
+    echo 'Bạn không có quyền truy cập';
     exit;
 }
 
@@ -262,6 +263,7 @@ $sql = "
         r.register_status,
 
         ui.fullname,
+        ui.avt_links,
 
         e.event_name,
         e.event_date
@@ -624,17 +626,20 @@ require_once "../includes/headers.php";
                         <div class="registration-item">
 
                             <div class="member-avatar">
+                                <?php 
+                                $fullname = $registration['username'];
+                                $avt = $registration['avt_links'];
+                                
+                                if (!empty($avt)): ?>
+                                        <img src="<?php echo htmlspecialchars($avt); ?>"
+                                            alt="Ảnh đại diện"
+                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
 
-                                <?php
-                                $fullname = $registration['fullname']
-                                    ?: $registration['username'];
-
-                                echo htmlspecialchars(
-                                    strtoupper(
-                                        mb_substr($fullname, 0, 1)
-                                    )
-                                );
-                                ?>
+                                        <?php else: ?>
+                                        <div class="avatar-default">
+                                            👤
+                                        </div>
+                                        <?php endif; ?> 
 
                             </div>
 

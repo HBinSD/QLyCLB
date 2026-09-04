@@ -176,19 +176,22 @@ tbody tr:hover {
 .member-avatar {
     width: 38px;
     height: 38px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 50%;
-
     background: #e8f0f8;
-
     color: #1e3a5f;
-
     font-weight: 700;
 }
+
+.member-avatar > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+
 
 .member-info strong {
     display: block;

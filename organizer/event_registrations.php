@@ -59,6 +59,7 @@ $sql = "
 
         ui.fullname,
         ui.email,
+        ui.avt_links,
         ui.phone
 
     FROM Register_event AS r
@@ -383,14 +384,19 @@ require_once "../includes/headers.php";
 
                                             <div class="member-avatar">
 
-                                                <?= strtoupper(
-                                                    mb_substr(
-                                                        $registration['fullname']
-                                                        ?? $registration['username'],
-                                                        0,
-                                                        1
-                                                    )
-                                                ) ?>
+                                            <?php 
+                                            $fullname = $registration['username'];
+                                            $avt = $registration['avt_links'];
+                                            
+                                            if (!empty($avt)): ?>
+                                                    <img src="<?php echo htmlspecialchars($avt); ?>"
+                                                        alt="Ảnh đại diện"
+                                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                    <?php else: ?>
+                                                    <div class="avatar-default">
+                                                        👤
+                                                    </div>
+                                                <?php endif; ?> 
 
                                             </div>
 
