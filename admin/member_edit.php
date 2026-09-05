@@ -25,6 +25,11 @@ $db = $database->getConnection();
 
 $clubId = "CLB001";
 
+// Lấy danh sách ban của CLB để admin chọn cho thành viên
+$stmt = $db->prepare("SELECT band_id, band_name FROM ClubBand WHERE club_id = :club_id ORDER BY band_id ASC");
+$stmt->execute([':club_id' => $clubId]);
+$bands = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 
 // ========================================
 // LẤY USERNAME
@@ -60,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $position = trim($_POST['position'] ?? '');
     $status = trim($_POST['status'] ?? '');
+    $bandId = trim($_POST['band_id'] ?? '');
 
     $allowedPositions = ['Thành viên', 'Chủ nhiệm'];
 
@@ -82,6 +88,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ) {
 
         $error = "Email không hợp lệ.";
+
+    } elseif ($bandId !== '' && !in_array($bandId, array_map('strval', array_column($bands, 'band_id')), true)) {
+
+        $error = "Ban không hợp lệ.";
 
     } elseif (!in_array($position, $allowedPositions, true)) {
 
@@ -252,6 +262,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
             // ====================================
+            // CẬP NHẬT BAN CỦA THÀNH VIÊN
+            // ====================================
+
+            // Mỗi thành viên chỉ thuộc một ban trong CLB.
+            $stmt = $db->prepare("
+                DELETE FROM ClubBandMember
+                WHERE username = :username
+                  AND club_id = :club_id
+            ");
+            $stmt->execute([
+                ':username' => $username,
+                ':club_id' => $clubId
+            ]);
+
+            if ($bandId !== '') {
+                $stmt = $db->prepare("
+                    INSERT INTO ClubBandMember (username, club_id, band_id)
+                    VALUES (:username, :club_id, :band_id)
+                ");
+                $stmt->execute([
+                    ':username' => $username,
+                    ':club_id' => $clubId,
+                    ':band_id' => $bandId
+                ]);
+            }
+
+
+            // ====================================
             // COMMIT
             // ====================================
 
@@ -284,6 +322,9 @@ $stmt = $db->prepare("
         cm.position,
         cm.status,
 
+        cbm.band_id,
+        cb.band_name,
+
         ui.fullname,
         ui.email,
         ui.phone,
@@ -293,6 +334,14 @@ $stmt = $db->prepare("
         ui.gender
 
     FROM ClubMember cm
+
+    LEFT JOIN ClubBandMember cbm
+        ON cbm.username = cm.username
+       AND cbm.club_id = cm.club_id
+
+    LEFT JOIN ClubBand cb
+        ON cb.band_id = cbm.band_id
+       AND cb.club_id = cm.club_id
 
     INNER JOIN UserInfo ui
         ON ui.username = cm.username
@@ -727,6 +776,44 @@ require_once "../includes/headers.php";
                     <small>
                         Nếu chọn Chủ nhiệm, Chủ nhiệm hiện tại sẽ tự động
                         chuyển xuống Thành viên.
+                    </small>
+
+                </div>
+
+
+                <!-- BAND -->
+
+                <div class="form-group">
+
+                    <label>
+                        Ban trong CLB
+                    </label>
+
+                    <select name="band_id">
+
+                        <option value="">
+                            -- Chưa thuộc ban nào --
+                        </option>
+
+                        <?php foreach ($bands as $band): ?>
+
+                            <option
+                                value="<?= htmlspecialchars($band['band_id']) ?>"
+                                <?= (string)($member['band_id'] ?? '') === (string)$band['band_id']
+                                    ? 'selected'
+                                    : '' ?>
+                            >
+                                <?= htmlspecialchars($band['band_id']) ?>
+                                -
+                                <?= htmlspecialchars($band['band_name']) ?>
+                            </option>
+
+                        <?php endforeach; ?>
+
+                    </select>
+
+                    <small>
+                        Chọn ban mà thành viên đang trực thuộc.
                     </small>
 
                 </div>
