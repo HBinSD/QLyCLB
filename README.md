@@ -11,7 +11,7 @@
 
 ### Mục tiêu
 
-- Quản lý thông tin các câu lạc bộ.
+- Quản lý thông tin 1 câu lạc bộ.
 - Quản lý danh sách thành viên.
 - Quản lý các hoạt động/sự kiện.
 - Cho phép sinh viên đăng ký tham gia câu lạc bộ.
@@ -46,11 +46,15 @@
 ## 7. Cấu trúc thư mục
 ```text
 QLyCLB/
-├── frontend/        # Giao diện hệ thống
-├── backend/         # Xử lý chức năng
-├── database/        # Cơ sở dữ liệu
-├── README.md        # Tài liệu dự án
-└── index.php        # Trang chính
+├── admin/             # Giao diện admin + các chức năng
+├── organizer/         # Giao diện người tổ chức + các chức năng
+├── member/            # Giao diện thành viên + các chức năng
+├── database/          # Cơ sở dữ liệu
+├── Models/            # Các file xử lí luồng dữ liệu
+├── README.md          # Tài liệu dự án
+├── about.php          # Trang about
+├── login.php          # Trang đăng nhập
+└── logout.php         # Trang chính
 ```
 
 ## 8. Test checklist

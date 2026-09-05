@@ -1,30 +1,57 @@
 <?php
-require_once "../includes/auth.php";
-require_once "../database/database.php";
+session_start();
 
-$database = new Database();
-$db = $database->getConnection();
+if (!isset($_SESSION['sinhvien'])) {
+    $_SESSION['sinhvien'] = [
+        1 => [
+            'msv' => '224001802',
+            'hoten' => 'Phạm Thị Hoàng Lan',
+            'lop' => 'CNTT D2024',
+            'khoa' => 'Công nghệ thông tin',
+            'email' => 'lan@example.com',
+            'sdt' => '0987654321',
+            'ban' => 'Truyền thông',
+            'chucvu' => 'Thành viên',
+            'trangthai' => 'Đang hoạt động'
+        ],
 
-$sql = "
-    SELECT 
-        cm.username,
-        ui.fullname,
-        ui.student_code,
-        ui.class,
-        ui.faculty,
-        ui.email,
-        ui.phone,
-        cm.ban,
-        cm.position,
-        cm.status
-    FROM ClubMember cm
-    JOIN UserInfo ui ON cm.username = ui.username
-";
+        2 => [
+            'msv' => '224001781',
+            'hoten' => 'Nguyễn Tùng Dương',
+            'lop' => 'CNTT D2024',
+            'khoa' => 'Công nghệ thông tin',
+            'email' => 'duong@example.com',
+            'sdt' => '0977777777',
+            'ban' => 'Kỹ thuật',
+            'chucvu' => 'Trưởng ban',
+            'trangthai' => 'Đang hoạt động'
+        ],
 
-$stmt = $db->prepare($sql);
-$stmt->execute();
+        3 => [
+            'msv' => '224001798',
+            'hoten' => 'Đinh Gia Hưng',
+            'lop' => 'CNTT D2024',
+            'khoa' => 'Công nghệ thông tin',
+            'email' => 'hung@example.com',
+            'sdt' => '0966666666',
+            'ban' => 'Sự kiện',
+            'chucvu' => 'Thành viên',
+            'trangthai' => 'Đang hoạt động'
+        ],
 
-$danhSachSinhVien = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        4 => [
+            'msv' => '224001823',
+            'hoten' => 'Vũ Mai Phương',
+            'lop' => 'CNTT D2024',
+            'khoa' => 'Công nghệ thông tin',
+            'email' => 'phuong@example.com',
+            'sdt' => '0955555555',
+            'ban' => 'Đối ngoại',
+            'chucvu' => 'Phó ban',
+            'trangthai' => 'Đang hoạt động'
+        ]
+    ];
+}
 
 
 /*
@@ -33,18 +60,7 @@ $danhSachSinhVien = $stmt->fetchAll(PDO::FETCH_ASSOC);
 |--------------------------------------------------------------------------
 */
 
-$id = $_GET['id'] ?? '';
-
-$sinhVien = null;
-
-if ($id !== '') {
-    foreach ($danhSachSinhVien as $student) {
-        if ($student['student_code'] === $id) {
-            $sinhVien = $student;
-            break;
-        }
-    }
-}
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 
 /*
@@ -55,15 +71,11 @@ if ($id !== '') {
 
 if (isset($_POST['delete'])) {
 
-    $username = $_POST['username'];
+    $deleteId = (int)$_POST['delete_id'];
 
-    $sql = "DELETE FROM ClubMember WHERE username = :username";
-
-    $stmt = $db->prepare($sql);
-
-    $stmt->execute([
-        ':username' => $username
-    ]);
+    if (isset($_SESSION['sinhvien'][$deleteId])) {
+        unset($_SESSION['sinhvien'][$deleteId]);
+    }
 
     header("Location: sinhvien.php");
     exit;
@@ -78,60 +90,66 @@ if (isset($_POST['delete'])) {
 
 if (isset($_POST['update'])) {
 
-    $username = $_POST['username'];
-    $ban = $_POST['ban'];
-    $position = $_POST['position'];
-    $status = $_POST['status'];
+    $updateId = (int)$_POST['update_id'];
 
-    $sql = "
-        UPDATE ClubMember
-        SET 
-            ban = :ban,
-            position = :position,
-            status = :status
-        WHERE username = :username
-    ";
+    if (isset($_SESSION['sinhvien'][$updateId])) {
 
-    $stmt = $db->prepare($sql);
+        $_SESSION['sinhvien'][$updateId]['ban'] =
+            $_POST['ban'];
 
-    $stmt->execute([
-        ':ban' => $ban,
-        ':position' => $position,
-        ':status' => $status,
-        ':username' => $username
-    ]);
+        $_SESSION['sinhvien'][$updateId]['chucvu'] =
+            $_POST['chucvu'];
 
-    header("Location: sinhvien.php?id=" . urlencode($_POST['student_code']));
+        $_SESSION['sinhvien'][$updateId]['trangthai'] =
+            $_POST['trangthai'];
+    }
+
+    header("Location: sinhvien.php?id=" . $updateId);
     exit;
 }
 
 
 $keyword = $_GET['keyword'] ?? '';
 
-$ketQuaTimKiem = [];
+$danhSachSinhVien = [];
 
-foreach ($danhSachSinhVien as $student) {
+foreach ($_SESSION['sinhvien'] as $studentId => $student) {
 
     if (
         $keyword === '' ||
-        stripos($student['student_code'], $keyword) !== false ||
-        stripos($student['fullname'], $keyword) !== false ||
-        stripos($student['class'], $keyword) !== false
+        stripos($student['msv'], $keyword) !== false ||
+        stripos($student['hoten'], $keyword) !== false ||
+        stripos($student['lop'], $keyword) !== false
     ) {
-        $ketQuaTimKiem[] = $student;
+        $danhSachSinhVien[$studentId] = $student;
     }
 }
 
-$danhSachSinhVien = $ketQuaTimKiem;
 ?>
 
-<?php require_once "../includes/headers.php"; ?>
+<!DOCTYPE html>
+<html lang="vi">
 
-<?php require_once "../includes/sidebar-admin.php"; ?>
+<head>
 
-<main class="main-content">
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quản lý sinh viên CLB</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
 
 <div class="container">
+
+    <!-- TIÊU ĐỀ -->
+
+    <h1>QUẢN LÝ SINH VIÊN</h1>
 
     <div class="line"></div>
 
@@ -195,10 +213,10 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
                 <?php $stt = 1; ?>
 
-                <?php foreach ($danhSachSinhVien as $student): ?>
+                <?php foreach ($danhSachSinhVien as $studentId => $student): ?>
 
-                    <tr 
-                        class="<?= ($id === $student['student_code']) ? 'selected' : '' ?>" 
+                    <tr
+                        class="<?= ($id === $studentId) ? 'selected' : '' ?>"
                     >
 
                         <td>
@@ -206,25 +224,25 @@ $danhSachSinhVien = $ketQuaTimKiem;
                         </td>
 
                         <td>
-                            <a 
-                                class="student-link" 
-                                href="sinhvien.php?id=<?= urlencode($student['student_code']) ?>"
+                            <a
+                                class="student-link"
+                                href="sinhvien.php?id=<?= $studentId ?>"
                             >
-                                <?= htmlspecialchars($student['student_code']) ?>
+                                <?= htmlspecialchars($student['msv']) ?>
                             </a>
                         </td>
 
                         <td>
-                            <a 
-                                class="student-link" 
-                                href="sinhvien.php?id=<?= urlencode($student['student_code']) ?>"
+                            <a
+                                class="student-link"
+                                href="sinhvien.php?id=<?= $studentId ?>"
                             >
-                                <?= htmlspecialchars($student['fullname']) ?>
+                                <?= htmlspecialchars($student['hoten']) ?>
                             </a>
                         </td>
 
                         <td>
-                            <?= htmlspecialchars($student['class']) ?>
+                            <?= htmlspecialchars($student['lop']) ?>
                         </td>
 
                         <td>
@@ -232,18 +250,18 @@ $danhSachSinhVien = $ketQuaTimKiem;
                         </td>
 
                         <td>
-                            <?= htmlspecialchars($student['position']) ?>
+                            <?= htmlspecialchars($student['chucvu']) ?>
                         </td>
 
                         <td>
 
-                            <?php if ($student['status'] === 'Đang hoạt động'): ?>
+                            <?php if ($student['trangthai'] === 'Đang hoạt động'): ?>
 
                                 <span class="status active">
                                     Đang hoạt động
                                 </span>
 
-                            <?php elseif ($student['status'] === 'Tạm khóa'): ?>
+                            <?php elseif ($student['trangthai'] === 'Tạm khóa'): ?>
 
                                 <span class="status locked">
                                     Tạm khóa
@@ -252,7 +270,7 @@ $danhSachSinhVien = $ketQuaTimKiem;
                             <?php else: ?>
 
                                 <span class="status">
-                                    <?= htmlspecialchars($student['status']) ?>
+                                    <?= htmlspecialchars($student['trangthai']) ?>
                                 </span>
 
                             <?php endif; ?>
@@ -282,9 +300,9 @@ $danhSachSinhVien = $ketQuaTimKiem;
     </div>
 
 
-    <?php if ($sinhVien !== null): ?>
+    <?php if ($id > 0 && isset($_SESSION['sinhvien'][$id])): ?>
 
-    <?php $student = $sinhVien; ?>
+        <?php $student = $_SESSION['sinhvien'][$id]; ?>
 
 
         <!-- THÔNG TIN SINH VIÊN ĐƯỢC CHỌN -->
@@ -300,22 +318,22 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
                 <div>
                     <strong>MSSV:</strong>
-                    <?= htmlspecialchars($student['student_code']) ?>
+                    <?= htmlspecialchars($student['msv']) ?>
                 </div>
 
                 <div>
                     <strong>Họ tên:</strong>
-                    <?= htmlspecialchars($student['fullname']) ?>
+                    <?= htmlspecialchars($student['hoten']) ?>
                 </div>
 
                 <div>
                     <strong>Lớp:</strong>
-                    <?= htmlspecialchars($student['class']) ?>
+                    <?= htmlspecialchars($student['lop']) ?>
                 </div>
 
                 <div>
                     <strong>Khoa:</strong>
-                    <?= htmlspecialchars($student['faculty']) ?>
+                    <?= htmlspecialchars($student['khoa']) ?>
                 </div>
 
                 <div>
@@ -325,7 +343,7 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
                 <div>
                     <strong>Số điện thoại:</strong>
-                    <?= htmlspecialchars($student['phone']) ?>
+                    <?= htmlspecialchars($student['sdt']) ?>
                 </div>
 
                 <div>
@@ -335,12 +353,12 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
                 <div>
                     <strong>Chức vụ:</strong>
-                    <?= htmlspecialchars($student['position']) ?>
+                    <?= htmlspecialchars($student['chucvu']) ?>
                 </div>
 
                 <div>
                     <strong>Trạng thái:</strong>
-                    <?= htmlspecialchars($student['status']) ?>
+                    <?= htmlspecialchars($student['trangthai']) ?>
                 </div>
 
             </div>
@@ -360,10 +378,10 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
                 <form method="POST" class="delete-form">
 
-                    <input 
-                        type="hidden" 
-                        name="username" 
-                        value="<?= htmlspecialchars($student['username']) ?>"
+                    <input
+                        type="hidden"
+                        name="delete_id"
+                        value="<?= $id ?>"
                     >
 
                     <button
@@ -398,14 +416,10 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
                     <input
                         type="hidden"
-                        name="username"
-                        value="<?= htmlspecialchars($student['username']) ?>"
+                        name="update_id"
+                        value="<?= $id ?>"
                     >
-                    <input 
-                        type="hidden" 
-                        name="student_code" 
-                        value="<?= htmlspecialchars($student['student_code']) ?>"
-                    >
+
 
                     <div class="form-row">
 
@@ -413,7 +427,7 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
                         <input
                             type="text"
-                            value="<?= htmlspecialchars($student['student_code']) ?>"
+                            value="<?= htmlspecialchars($student['msv']) ?>"
                             readonly
                         >
 
@@ -426,7 +440,7 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
                         <input
                             type="text"
-                            value="<?= htmlspecialchars($student['fullname']) ?>"
+                            value="<?= htmlspecialchars($student['hoten']) ?>"
                             readonly
                         >
 
@@ -476,46 +490,46 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
                         <label>Chức vụ</label>
 
-                        <select name="position">
+                        <select name="chucvu">
 
                             <option
                                 value="Thành viên"
-                                <?= $student['position'] === 'Thành viên' ? 'selected' : '' ?>
+                                <?= $student['chucvu'] === 'Thành viên' ? 'selected' : '' ?>
                             >
                                 Thành viên
                             </option>
 
                             <option
                                 value="Cộng tác viên"
-                                <?= $student['position'] === 'Cộng tác viên' ? 'selected' : '' ?>
+                                <?= $student['chucvu'] === 'Cộng tác viên' ? 'selected' : '' ?>
                             >
                                 Cộng tác viên
                             </option>
 
                             <option
                                 value="Trưởng ban"
-                                <?= $student['position'] === 'Trưởng ban' ? 'selected' : '' ?>
+                                <?= $student['chucvu'] === 'Trưởng ban' ? 'selected' : '' ?>
                             >
                                 Trưởng ban
                             </option>
 
                             <option
                                 value="Phó ban"
-                                <?= $student['position'] === 'Phó ban' ? 'selected' : '' ?>
+                                <?= $student['chucvu'] === 'Phó ban' ? 'selected' : '' ?>
                             >
                                 Phó ban
                             </option>
 
                             <option
                                 value="Chủ nhiệm"
-                                <?= $student['position'] === 'Chủ nhiệm' ? 'selected' : '' ?>
+                                <?= $student['chucvu'] === 'Chủ nhiệm' ? 'selected' : '' ?>
                             >
                                 Chủ nhiệm
                             </option>
 
                             <option
                                 value="Phó chủ nhiệm"
-                                <?= $student['position'] === 'Phó chủ nhiệm' ? 'selected' : '' ?>
+                                <?= $student['chucvu'] === 'Phó chủ nhiệm' ? 'selected' : '' ?>
                             >
                                 Phó chủ nhiệm
                             </option>
@@ -529,18 +543,18 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
                         <label>Trạng thái</label>
 
-                        <select name="status">
+                        <select name="trangthai">
 
                             <option
                                 value="Đang hoạt động"
-                                <?= $student['status'] === 'Đang hoạt động' ? 'selected' : '' ?>
+                                <?= $student['trangthai'] === 'Đang hoạt động' ? 'selected' : '' ?>
                             >
                                 Đang hoạt động
                             </option>
 
                             <option
                                 value="Tạm khóa"
-                                <?= $student['status'] === 'Tạm khóa' ? 'selected' : '' ?>
+                                <?= $student['trangthai'] === 'Tạm khóa' ? 'selected' : '' ?>
                             >
                                 Tạm khóa
                             </option>
@@ -581,6 +595,5 @@ $danhSachSinhVien = $ketQuaTimKiem;
 
 </div>
 
-</main>
-
-<?php require_once "../includes/footer.php"; ?>
+</body>
+</html>

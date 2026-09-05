@@ -25,10 +25,3 @@
 <a href="profile.php" class="sidebar-item<?= sidebar_active('profile.php') ?>">
     <span class="sidebar-text">Thông tin cá nhân</span>
 </a>
-<a href="sinhvien.php" class="sidebar-item<?= sidebar_active('sinhvien.php') ?>">
-    <span class="sidebar-text">Quản lý sinh viên</span>
-</a>
-
-<a href="thongbao.php" class="sidebar-item<?= sidebar_active('thongbao.php') ?>">
-    <span class="sidebar-text">Quản lý thông báo</span>
-</a>
