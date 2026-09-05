@@ -64,37 +64,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | Tạo band_id
-            |--------------------------------------------------------------------------
-            |
-            | Lấy band_id lớn nhất của CLB rồi + 1.
-            |
-            */
-
-            $stmt = $db->prepare("
-                SELECT MAX(band_id)
-                FROM ClubBand
-                WHERE club_id = :club_id
-            ");
-
-            $stmt->execute([
-                ':club_id' => $clubId
-            ]);
-
-            $maxBandId = $stmt->fetchColumn();
-
-            $newBandId = $maxBandId
-                ? ((int)$maxBandId + 1)
-                : 1;
-
-
+        
             /*
             |--------------------------------------------------------------------------
             | INSERT
             |--------------------------------------------------------------------------
             */
+
+            $bandID = trim($_POST['band_id']);
 
             $stmt = $db->prepare("
                 INSERT INTO ClubBand (
@@ -110,13 +87,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ");
 
             $stmt->execute([
-                ':band_id' => $newBandId,
+                ':band_id' => $bandID,
                 ':club_id' => $clubId,
                 ':band_name' => $bandName
             ]);
 
 
-            header("Location: club.php");
+            header("Location: clubs.php");
             exit;
 
         } catch (Exception $e) {
@@ -133,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 $pageTitle = "Thêm ban";
-$activeMenu = "club.php";
+$activeMenu = "clubs.php";
 
 require_once "../includes/headers.php";
 ?>
@@ -213,6 +190,26 @@ require_once "../includes/headers.php";
 
                 </div>
 
+                <div class="form-group">
+
+                    <label for="band_name">
+                        Mã ban
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="band_id"
+                        name="band_id"
+                        placeholder="Ví dụ: EVT"
+                        value="<?= htmlspecialchars(
+                            $_POST['band_id'] ?? ''
+                        ) ?>"
+                        required
+                    >
+
+                </div>
+
 
                 <div class="form-group">
 
@@ -240,7 +237,7 @@ require_once "../includes/headers.php";
             <div class="form-actions">
 
                 <a
-                    href="club.php"
+                    href="clubs.php"
                     class="btn-cancel"
                 >
                     Hủy

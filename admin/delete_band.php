@@ -20,7 +20,7 @@ $clubId = "CLB001";
 $bandId = trim($_GET['id'] ?? '');
 
 if ($bandId === '') {
-    header("Location: club.php");
+    header("Location: clubs.php");
     exit;
 }
 
@@ -107,5 +107,5 @@ try {
 }
 
 
-header("Location: club.php");
+header("Location: clubs.php");
 exit;
