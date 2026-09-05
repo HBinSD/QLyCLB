@@ -26,7 +26,7 @@ if (
     exit;
 }
 
-$pageTitle = "Duyệt đăng ký sự kiện";
+$pageTitle = "Danh sách tham gia sự kiện";
 $activeMenu = "event_registrations.php";
 
 $database = new Database();
@@ -185,7 +185,7 @@ require_once "../includes/headers.php";
 
             <div>
 
-                <h1>Duyệt đăng ký sự kiện</h1>
+                <h1>Danh sách tham gia sự kiện</h1>
 
                 <p>
                     Quản lý và xét duyệt thành viên đăng ký tham gia sự kiện.
@@ -334,10 +334,6 @@ require_once "../includes/headers.php";
                                 <th>Địa điểm</th>
 
                                 <th>Đăng ký lúc</th>
-
-                                <th>Trạng thái</th>
-
-                                <th>Thao tác</th>
 
                             </tr>
 
@@ -491,94 +487,6 @@ require_once "../includes/headers.php";
 
                                     </td>
 
-
-                                    <!-- ACTION -->
-
-                                    <td>
-
-                                        <?php if (
-                                            $registration['register_status']
-                                            === 'pending'
-                                        ): ?>
-
-                                            <div class="action-buttons">
-
-                                                <form
-                                                    action="approve_event.php"
-                                                    method="POST"
-                                                    onsubmit="
-                                                        return confirm(
-                                                            'Bạn có chắc muốn duyệt đăng ký này?'
-                                                        );
-                                                    "
-                                                >
-
-                                                    <input
-                                                        type="hidden"
-                                                        name="event_id"
-                                                        value="<?= htmlspecialchars(
-                                                            $registration['event_id']
-                                                        ) ?>"
-                                                    >
-
-                                                    <input
-                                                        type="hidden"
-                                                        name="username"
-                                                        value="<?= htmlspecialchars(
-                                                            $registration['username']
-                                                        ) ?>"
-                                                    >
-
-                                                    <button
-                                                        type="submit"
-                                                        class="btn-approve"
-                                                    >
-                                                        ✓ Duyệt
-                                                    </button>
-
-                                                </form>
-
-
-                                                <a
-                                                    href="reject_event.php?event_id=<?= urlencode(
-                                                        $registration['event_id']
-                                                    ) ?>&username=<?= urlencode(
-                                                        $registration['username']
-                                                    ) ?>"
-                                                    class="btn-reject"
-                                                >
-                                                    ✕ Từ chối
-                                                </a>
-
-                                            </div>
-
-                                        <?php elseif (
-                                            $registration['register_status']
-                                            === 'approved'
-                                        ): ?>
-
-                                            <span class="processed approved-text">
-                                                ✓ Đã duyệt
-                                            </span>
-
-                                        <?php elseif (
-                                            $registration['register_status']
-                                            === 'rejected'
-                                        ): ?>
-
-                                            <span class="processed rejected-text">
-                                                ✕ Đã từ chối
-                                            </span>
-
-                                        <?php else: ?>
-
-                                            <span class="processed">
-                                                —
-                                            </span>
-
-                                        <?php endif; ?>
-
-                                    </td>
 
                                 </tr>
 

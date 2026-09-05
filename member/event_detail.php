@@ -263,27 +263,10 @@
 
     $canRegister = false;
 
-    switch ($registration['register_status']) {
-
-        case 'pending':
-            $registerMessage = 'Bạn đã đăng ký và đang chờ organizer duyệt.';
-            break;
-
-        case 'approved':
-            $registerMessage = 'Bạn đã được duyệt tham gia sự kiện.';
-            break;
-
-        case 'rejected':
-            $registerMessage = 'Đăng ký của bạn đã bị từ chối.';
-            break;
-
-        case 'cancelled':
-            $registerMessage = 'Bạn đã hủy đăng ký sự kiện.';
-            break;
-
-        default:
-            $registerMessage = 'Bạn đã đăng ký sự kiện này.';
-    }
+    if ($registration) {
+    $canRegister = false;
+    $registerMessage = 'Bạn đã đăng ký tham gia sự kiện này.';
+}
     }
 
     $pageTitle  = $event['event_name'];

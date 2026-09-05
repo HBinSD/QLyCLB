@@ -207,9 +207,33 @@ try {
     // INSERT CLUB MEMBER
     // =================================================
 
+    // 1. TÌM ID LỚN NHẤT HIỆN TẠI TRONG BẢNG ClubMember (Ví dụ: CM008)
+    $sqlMaxId = "
+        SELECT id 
+        FROM ClubMember 
+        WHERE club_id = :club_id 
+        ORDER BY id DESC 
+        LIMIT 1
+    ";
+    $stmtMax = $db->prepare($sqlMaxId);
+    $stmtMax->execute([':club_id' => $clubId]);
+    $lastId = $stmtMax->fetchColumn();
+
+    // 2. TÍNH TOÁN ID TIẾP THEO
+    if ($lastId && preg_match('/^CM(\d+)$/', $lastId, $matches)) {
+        // Nếu đã có dạng CM001, lấy số phía sau tăng lên 1 (ví dụ: 8 thành 9)
+        $nextNumber = intval($matches[1]) + 1;
+        $newMemberId = 'CM' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT); // Kết quả: CM009
+    } else {
+        // Nếu bảng chưa có dữ liệu nào, bắt đầu từ CM001
+        $newMemberId = 'CM001';
+    }
+
     $defaultRole = 'Thành viên';
+
     $sql = "
         INSERT INTO ClubMember (
+            id,
             username,
             club_id,
             joined_at,
@@ -217,6 +241,7 @@ try {
             status
         )
         VALUES (
+            :id,
             :username,
             :club_id,
             NOW(),
@@ -228,12 +253,11 @@ try {
     $stmt = $db->prepare($sql);
 
     $stmt->execute([
+        ':id' => $newMemberId,
         ':username' => $username,
         ':club_id' => $clubId,
         ':position' => $defaultRole
     ]);
-
-
     // =================================================
     // INSERT CLUB BAND MEMBER
     // =================================================

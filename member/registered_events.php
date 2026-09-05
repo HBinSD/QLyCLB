@@ -250,11 +250,6 @@ require_once "../includes/headers.php";
                                     ) ?>
                                 </span>
                             </div>
-
-                            <span class="register-status <?= $status['class'] ?>">
-                                <?= htmlspecialchars($status['text']) ?>
-                            </span>
-
                         </div>
 
 
@@ -340,26 +335,6 @@ require_once "../includes/headers.php";
                                     <?= $registerTime ?>
                                 </strong>
                             </span>
-
-                            <?php if (
-                                $event['register_status'] === 'approved'
-                                && !empty($event['approved_time'])
-                            ): ?>
-
-                                <span>
-                                    Duyệt lúc:
-                                    <strong>
-                                        <?= date(
-                                            'd/m/Y H:i',
-                                            strtotime(
-                                                $event['approved_time']
-                                            )
-                                        ) ?>
-                                    </strong>
-                                </span>
-
-                            <?php endif; ?>
-
                         </div>
 
 

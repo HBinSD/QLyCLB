@@ -5,7 +5,7 @@ class Database
     private $host = "localhost";
     private $db_name = "qlyCLB";
     private $username = "root";
-    private $password = "";
+    private $password = "nguyenduong";
 
     public $conn;
 

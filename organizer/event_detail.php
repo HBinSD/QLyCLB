@@ -101,28 +101,6 @@ $remainingSlots = max(
     $slots - $approvedCount
 );
 
-
-/*
-|--------------------------------------------------------------------------
-| Đếm số người đang chờ duyệt
-|--------------------------------------------------------------------------
-*/
-
-$sql = "
-    SELECT COUNT(*)
-    FROM Register_event
-    WHERE event_id = :event_id
-      AND register_status = 'pending'
-";
-
-$stmt = $db->prepare($sql);
-$stmt->execute([
-    ':event_id' => $eventId
-]);
-
-$pendingCount = (int)$stmt->fetchColumn();
-
-
 /*
 |--------------------------------------------------------------------------
 | Các ban được phép tham gia
@@ -384,29 +362,11 @@ require_once "../includes/headers.php";
                     <span class="stat-label">
                         Đã duyệt
                     </span>
-
                 </div>
-
-
                 <div class="stat-item">
-
-                    <span class="stat-number">
-                        <?= $pendingCount ?>
-                    </span>
-
-                    <span class="stat-label">
-                        Chờ duyệt
-                    </span>
-
-                </div>
-
-
-                <div class="stat-item">
-
                     <span class="stat-number">
                         <?= $remainingSlots ?>
                     </span>
-
                     <span class="stat-label">
                         Còn trống
                     </span>
@@ -529,8 +489,6 @@ require_once "../includes/headers.php";
 
                             <th>Thời gian đăng ký</th>
 
-                            <th>Trạng thái</th>
-
                         </tr>
 
                     </thead>
@@ -603,22 +561,6 @@ require_once "../includes/headers.php";
                                         )
                                     ) ?>
                                 </td>
-
-
-                                <td>
-
-                                    <span
-                                        class="registration-status status-<?= htmlspecialchars(
-                                            $registration['register_status']
-                                        ) ?>"
-                                    >
-                                        <?= htmlspecialchars(
-                                            $registrationStatus
-                                        ) ?>
-                                    </span>
-
-                                </td>
-
                             </tr>
 
                         <?php endforeach; ?>

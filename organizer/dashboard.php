@@ -165,50 +165,6 @@ $stmt->execute([
 ]);
 
 $completedEvents = (int)$stmt->fetchColumn();
-
-
-// ==========================
-// ĐƠN ĐĂNG KÝ ĐANG CHỜ DUYỆT
-// ==========================
-
-$sql = "
-    SELECT COUNT(*)
-    FROM Register_event r
-    INNER JOIN Event e
-        ON e.event_id = r.event_id
-    WHERE e.club_id = :club_id
-      AND r.register_status = 'pending'
-";
-
-$stmt = $db->prepare($sql);
-$stmt->execute([
-    ':club_id' => $clubId
-]);
-
-$pendingRegistrations = (int)$stmt->fetchColumn();
-
-
-// ==========================
-// TỔNG LƯỢT ĐĂNG KÝ ĐÃ DUYỆT
-// ==========================
-
-$sql = "
-    SELECT COUNT(*)
-    FROM Register_event r
-    INNER JOIN Event e
-        ON e.event_id = r.event_id
-    WHERE e.club_id = :club_id
-      AND r.register_status = 'approved'
-";
-
-$stmt = $db->prepare($sql);
-$stmt->execute([
-    ':club_id' => $clubId
-]);
-
-$approvedRegistrations = (int)$stmt->fetchColumn();
-
-
 // ==========================
 // 5 SỰ KIỆN SẮP DIỄN RA
 // ==========================
@@ -249,49 +205,6 @@ $stmt->execute([
 ]);
 
 $upcomingEventList = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-// ==========================
-// 5 ĐƠN ĐĂNG KÝ MỚI NHẤT
-// ==========================
-
-$sql = "
-    SELECT
-        r.username,
-        r.event_id,
-        r.register_time,
-        r.register_status,
-
-        ui.fullname,
-        ui.avt_links,
-
-        e.event_name,
-        e.event_date
-
-    FROM Register_event r
-
-    INNER JOIN Event e
-        ON e.event_id = r.event_id
-
-    LEFT JOIN UserInfo ui
-        ON ui.username = r.username
-
-    WHERE e.club_id = :club_id
-      AND r.register_status = 'pending'
-
-    ORDER BY r.register_time DESC
-
-    LIMIT 5
-";
-
-$stmt = $db->prepare($sql);
-$stmt->execute([
-    ':club_id' => $clubId
-]);
-
-$pendingList = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
 // ==========================
 // HEADER + SIDEBAR
 // ==========================
@@ -398,21 +311,6 @@ require_once "../includes/headers.php";
             </div>
 
         </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon yellow">
-                📝
-            </div>
-
-            <div class="stat-content">
-                <span>Chờ duyệt</span>
-                <strong><?= $pendingRegistrations ?></strong>
-            </div>
-
-        </div>
-
     </div>
 
 
@@ -576,107 +474,6 @@ require_once "../includes/headers.php";
 
         </div>
 
-
-
-        <!-- =====================
-             ĐĂNG KÝ CHỜ DUYỆT
-        ====================== -->
-
-        <div class="dashboard-card">
-
-            <div class="card-header">
-
-                <div>
-                    <h2>Đăng ký chờ duyệt</h2>
-                    <p>Các yêu cầu mới nhất</p>
-                </div>
-
-                <a href="event_registrations.php">
-                    Xem tất cả →
-                </a>
-
-            </div>
-
-
-            <?php if (empty($pendingList)): ?>
-
-                <div class="empty-state">
-
-                    <div>✓</div>
-
-                    <p>
-                        Không có đơn đăng ký nào đang chờ duyệt.
-                    </p>
-
-                </div>
-
-            <?php else: ?>
-
-                <div class="registration-list">
-
-                    <?php foreach ($pendingList as $registration): ?>
-
-                        <div class="registration-item">
-
-                            <div class="member-avatar">
-                                <?php 
-                                $fullname = $registration['username'];
-                                $avt = $registration['avt_links'];
-                                
-                                if (!empty($avt)): ?>
-                                        <img src="<?php echo htmlspecialchars($avt); ?>"
-                                            alt="Ảnh đại diện"
-                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-
-                                        <?php else: ?>
-                                        <div class="avatar-default">
-                                            👤
-                                        </div>
-                                        <?php endif; ?> 
-
-                            </div>
-
-
-                            <div class="registration-info">
-
-                                <strong>
-                                    <?= htmlspecialchars($fullname) ?>
-                                </strong>
-
-                                <span>
-                                    <?= htmlspecialchars(
-                                        $registration['event_name']
-                                    ) ?>
-                                </span>
-
-                                <small>
-                                    Đăng ký:
-                                    <?= date(
-                                        'd/m/Y H:i',
-                                        strtotime($registration['register_time'])
-                                    ) ?>
-                                </small>
-
-                            </div>
-
-
-                            <a
-                                href="event_registrations.php"
-                                class="review-btn"
-                            >
-                                Xử lý
-                            </a>
-
-                        </div>
-
-                    <?php endforeach; ?>
-
-                </div>
-
-            <?php endif; ?>
-
-        </div>
-
     </div>
 
 
@@ -722,43 +519,6 @@ require_once "../includes/headers.php";
                 <div>
                     <strong>Quản lý sự kiện</strong>
                     <span>Xem và chỉnh sửa sự kiện</span>
-                </div>
-
-            </a>
-
-
-            <a
-                href="event_registrations.php"
-                class="quick-action"
-            >
-
-                <div class="quick-icon">
-                    📝
-                </div>
-
-                <div>
-                    <strong>Duyệt đăng ký</strong>
-
-                    <span>
-                        <?= $pendingRegistrations ?> yêu cầu đang chờ
-                    </span>
-                </div>
-
-            </a>
-
-
-            <a href="approved_events.php" class="quick-action">
-
-                <div class="quick-icon">
-                    ✅
-                </div>
-
-                <div>
-                    <strong>Đăng ký đã duyệt</strong>
-
-                    <span>
-                        <?= $approvedRegistrations ?> lượt đã duyệt
-                    </span>
                 </div>
 
             </a>
