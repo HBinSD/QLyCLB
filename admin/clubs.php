@@ -149,7 +149,7 @@ $bands = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // ======================================================
 
 $pageTitle = "Quản lý câu lạc bộ";
-$activeMenu = "club.php";
+$activeMenu = "clubs.php";
 
 require_once "../includes/headers.php";
 ?>
