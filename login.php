@@ -151,6 +151,16 @@
 
             <input type="submit" value="Đăng nhập">
         </form>
+
+        <div class="register">
+            <div>
+                Bạn chưa có tài khoản? 
+            </div>
+
+            <div>
+                <a href="register.php" class="">Đăng ký</a>
+            </div>
+        </div>
     </div>
 </body>
 

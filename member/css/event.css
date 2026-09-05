@@ -1,0 +1,218 @@
+
+
+/* CONTENT */
+
+.club-content {
+    flex: 1;
+}
+
+.page-header h1 {
+    margin: 0;
+    color: #1e3a5f;
+}
+
+.page-header p {
+    color: #64748b;
+}
+
+
+/* SEARCH */
+
+.event-search {
+    display: flex;
+    gap: 10px;
+
+    margin: 25px 0;
+}
+
+.event-search input {
+    flex: 1;
+
+    padding: 12px 15px;
+
+    border: 1px solid #d5dce5;
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+.event-search button {
+    padding: 12px 22px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #1e3a5f;
+    color: white;
+
+    cursor: pointer;
+}
+
+.event-search button:hover {
+    opacity: 0.9;
+}
+
+
+/* EVENT */
+
+.event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.event-card {
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 20px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+
+/* DATE */
+
+.event-date {
+    width: 75px;
+    height: 75px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    background: #e8f0f8;
+
+    border-radius: 10px;
+
+    color: #1e3a5f;
+}
+
+.event-date strong {
+    font-size: 28px;
+}
+
+.event-date span {
+    font-size: 12px;
+}
+
+
+/* INFO */
+
+.event-info {
+    flex: 1;
+}
+
+.event-info h2 {
+    margin: 0 0 10px;
+
+    font-size: 19px;
+
+    color: #1e3a5f;
+}
+
+.event-info p {
+    margin: 5px 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+/* ACTION */
+
+.event-action {
+    min-width: 130px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.event-open {
+    color: #15803d;
+    font-size: 14px;
+}
+
+.event-full {
+    color: #dc2626;
+    font-size: 14px;
+}
+
+.btn-detail {
+    display: inline-block;
+
+    padding: 9px 16px;
+
+    background: #1e3a5f;
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+}
+
+.btn-detail:hover {
+    opacity: 0.9;
+}
+
+
+/* EMPTY */
+
+.empty-event {
+    padding: 40px;
+
+    text-align: center;
+
+    background: white;
+
+    border-radius: 12px;
+
+    color: #64748b;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 800px) {
+
+    .club-layout {
+        flex-direction: column;
+    }
+
+    .club-sidebar {
+        width: auto;
+    }
+
+    .event-card {
+        align-items: flex-start;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .event-card {
+        flex-direction: column;
+    }
+
+    .event-action {
+        width: 100%;
+        align-items: flex-start;
+    }
+
+}

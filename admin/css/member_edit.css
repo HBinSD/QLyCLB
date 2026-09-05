@@ -1,0 +1,340 @@
+/* =========================================
+   MEMBER EDIT
+========================================= */
+
+.member-edit-page {
+    padding: 30px;
+
+    background: #f8fafc;
+
+    min-height: calc(100vh - 70px);
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.edit-header {
+    margin-bottom: 20px;
+}
+
+.back-link {
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    color: #2563eb;
+
+    font-size: 13px;
+
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.edit-header h1 {
+    margin: 0 0 7px;
+
+    color: #1e3a5f;
+
+    font-size: 27px;
+}
+
+.edit-header p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   ALERT
+========================================= */
+
+.alert {
+    margin-bottom: 20px;
+
+    padding: 13px 16px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+.alert.error {
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    color: #b91c1c;
+}
+
+.alert.success {
+    background: #f0fdf4;
+
+    border: 1px solid #bbf7d0;
+
+    color: #15803d;
+}
+
+
+/* =========================================
+   FORM CARD
+========================================= */
+
+.form-card {
+    margin-bottom: 20px;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 10px rgba(15, 23, 42, 0.04);
+
+    overflow: hidden;
+}
+
+
+.card-title {
+    padding: 20px;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.card-title h2 {
+    margin: 0 0 5px;
+
+    color: #1e293b;
+
+    font-size: 17px;
+}
+
+.card-title p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+.form-body {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+
+    padding: 22px;
+}
+
+
+/* =========================================
+   AVATAR
+========================================= */
+
+.avatar-section {
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 5px;
+}
+
+.edit-avatar,
+.avatar-fallback {
+    width: 85px;
+    height: 85px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 3px solid #e2e8f0;
+}
+
+.avatar-fallback {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #f1f5f9;
+
+    font-size: 30px;
+}
+
+
+/* =========================================
+   FORM GROUP
+========================================= */
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.form-group label span {
+    color: #dc2626;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    height: 42px;
+
+    padding: 0 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: white;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    transition: 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #3b82f6;
+
+    box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input:disabled {
+    background: #f8fafc;
+
+    color: #94a3b8;
+
+    cursor: not-allowed;
+}
+
+.form-group small {
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   ACTION
+========================================= */
+
+.form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 5px;
+}
+
+.btn-cancel,
+.btn-save {
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 20px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: white;
+
+    border: 1px solid #cbd5e1;
+
+    color: #64748b;
+}
+
+.btn-save {
+    border: none;
+
+    background: #1e3a5f;
+
+    color: white;
+}
+
+.btn-save:hover {
+    background: #16304d;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .member-edit-page {
+        padding: 20px;
+    }
+
+    .form-body {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn-cancel,
+    .btn-save {
+        width: 100%;
+    }
+}
