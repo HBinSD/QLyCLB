@@ -2,10 +2,12 @@
 
 session_start();
 
-require_once "/../../includes/auth.php";
-require_once "/../../database/database.php";
+require_once "../../includes/auth.php";
+require_once "../../database/database.php";
 $pageTitle = "Thông báo CLB";
 $activeMenu = "notifications.php";
+
+$user = $_SESSION["user"];
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +52,7 @@ $userClub = $stmtClub->fetch(PDO::FETCH_ASSOC);
 
 if (!$userClub) {
 
-    require_once "/../../includes/headers.php";
+    require_once "../../includes/headers.php";
 
 ?>
 
@@ -210,81 +212,86 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($action === "create") {
 
-        $tieuDe = trim($_POST["tieuDe"] ?? "");
+    $tieuDe = trim($_POST["tieuDe"] ?? "");
+    $noiDung = trim($_POST["noiDung"] ?? "");
+    $ngayDang = $_POST["ngayDang"] ?? "";
+    $nguoiDang = trim($_POST["nguoiDang"] ?? "");
+    $anh = trim($_POST["anh"] ?? "");
 
-        $noiDung = trim($_POST["noiDung"] ?? "");
+    if (
+        $tieuDe !== "" &&
+        $noiDung !== "" &&
+        $ngayDang !== "" &&
+        $nguoiDang !== ""
+    ) {
 
-        $ngayDang = $_POST["ngayDang"] ?? "";
+        // =====================================
+        // TẠO notification_id
+        // =====================================
 
-        $nguoiDang = trim($_POST["nguoiDang"] ?? "");
+        do {
+            $notificationId = random_int(100000, 999999);
 
-        $anh = trim($_POST["anh"] ?? "");
-
-
-        if (
-
-            $tieuDe !== "" &&
-
-            $noiDung !== "" &&
-
-            $ngayDang !== "" &&
-
-            $nguoiDang !== ""
-
-        ) {
-
-            $sql = "
-
-                INSERT INTO notifications
-                (
-                    club_id,
-                    title,
-                    content,
-                    posted_date,
-                    posted_by,
-                    image
-                )
-
-                VALUES
-                (
-                    :club_id,
-                    :title,
-                    :content,
-                    :posted_date,
-                    :posted_by,
-                    :image
-                )
-
+            $sqlCheck = "
+                SELECT COUNT(*)
+                FROM notifications
+                WHERE notification_id = :notification_id
             ";
 
+            $stmtCheck = $db->prepare($sqlCheck);
 
-            $stmt = $db->prepare($sql);
-
-
-            $stmt->execute([
-
-                ':club_id' => $clubId,
-
-                ':title' => $tieuDe,
-
-                ':content' => $noiDung,
-
-                ':posted_date' => $ngayDang,
-
-                ':posted_by' => $nguoiDang,
-
-                ':image' => $anh !== "" ? $anh : null
-
+            $stmtCheck->execute([
+                ':notification_id' => $notificationId
             ]);
 
-        }
+            $exists = (int)$stmtCheck->fetchColumn() > 0;
+
+        } while ($exists);
 
 
-        header("Location: thongbao.php?success=created");
+        // =====================================
+        // INSERT THÔNG BÁO
+        // =====================================
 
-        exit;
+        $sql = "
+            INSERT INTO notifications
+            (
+                notification_id,
+                club_id,
+                title,
+                content,
+                posted_date,
+                posted_by,
+                image
+            )
+            VALUES
+            (
+                :notification_id,
+                :club_id,
+                :title,
+                :content,
+                :posted_date,
+                :posted_by,
+                :image
+            )
+        ";
 
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([
+            ':notification_id' => $notificationId,
+            ':club_id' => $clubId,
+            ':title' => $tieuDe,
+            ':content' => $noiDung,
+            ':posted_date' => $ngayDang,
+            ':posted_by' => $nguoiDang,
+            ':image' => $anh !== "" ? $anh : null
+        ]);
     }
+
+    header("Location: thongbao.php?success=created");
+    exit;
+}
 
 
     /*
@@ -626,133 +633,15 @@ $thongBaoHienThi =
 |--------------------------------------------------------------------------
 */
 
-require_once "../includes/headers.php";
+require_once "../../includes/headers.php";
 
 ?>
 
-<link rel="stylesheet" href="css/club.css">
+<link rel="stylesheet" href="club.css">
 
-<link rel="stylesheet" href="css/notifications.css">
-
-<div class="club-layout">
-
-```
-<!-- =====================================
-     SIDEBAR
-====================================== -->
-
-<aside class="club-sidebar">
+<link rel="stylesheet" href="style.css">
 
 
-    <div class="club-sidebar-title">
-
-        <span>
-            ☰
-        </span>
-
-        <span>
-            QUẢN LÝ CLB
-        </span>
-
-    </div>
-
-
-    <nav class="club-menu">
-
-
-        <!-- GIỚI THIỆU -->
-
-        <a
-            href="club.php"
-            class="club-menu-item"
-        >
-
-            <span class="menu-icon">
-                🏠
-            </span>
-
-            <span>
-                Giới thiệu CLB
-            </span>
-
-        </a>
-
-
-        <!-- THÀNH VIÊN -->
-
-        <a
-            href="club_member.php"
-            class="club-menu-item"
-        >
-
-            <span class="menu-icon">
-                👥
-            </span>
-
-            <span>
-                Danh sách thành viên
-            </span>
-
-        </a>
-
-
-        <!-- SỰ KIỆN -->
-
-        <a
-            href="events.php"
-            class="club-menu-item"
-        >
-
-            <span class="menu-icon">
-                📅
-            </span>
-
-            <span>
-                Sự kiện
-            </span>
-
-        </a>
-
-
-        <!-- ĐÃ ĐĂNG KÝ -->
-
-        <a
-            href="registered_events.php"
-            class="club-menu-item"
-        >
-
-            <span class="menu-icon">
-                ✓
-            </span>
-
-            <span>
-                Các sự kiện đã đăng ký
-            </span>
-
-        </a>
-
-
-        <!-- THÔNG BÁO -->
-
-        <a
-            href="thongbao.php"
-            class="club-menu-item active"
-        >
-
-            <span class="menu-icon">
-                🔔
-            </span>
-
-            <span>
-                Thông báo CLB
-            </span>
-
-        </a>
-
-
-    </nav>
-
-</aside>
 
 
 <!-- =====================================
@@ -1635,4 +1524,4 @@ function closeDetail() {
 
 </script>
 
-<?php require_once "../includes/footer.php"; ?>
+<?php require_once "../../includes/footer.php"; ?>
