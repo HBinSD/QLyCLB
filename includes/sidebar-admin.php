@@ -15,18 +15,10 @@
     <span class="sidebar-text">Quản lý câu lạc bộ</span>
 </a>
 
-<a href="activities.php" class="sidebar-item<?= sidebar_active('activities.php') ?>">
-    <span class="sidebar-text">Duyệt hoạt động</span>
-</a>
-
 <a href="reports.php" class="sidebar-item<?= sidebar_active('reports.php') ?>">
     <span class="sidebar-text">Báo cáo</span>
 </a>
 
 <a href="settings.php" class="sidebar-item<?= sidebar_active('settings.php') ?>">
     <span class="sidebar-text">Cài đặt hệ thống</span>
-</a>
-
-<a href="profile.php" class="sidebar-item<?= sidebar_active('profile.php') ?>">
-    <span class="sidebar-text">Thông tin cá nhân</span>
 </a>
