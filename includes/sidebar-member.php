@@ -7,7 +7,7 @@
     <span class="sidebar-text">Thông tin CLB</span>
 </a>
 
-<a href="news.php" class="sidebar-item<?= sidebar_active('news.php') ?>">
+<a href="notifications.php" class="sidebar-item<?= sidebar_active('news.php') ?>">
     <span class="sidebar-text">Thông báo</span>
 </a>
 
