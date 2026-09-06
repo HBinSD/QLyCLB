@@ -1,0 +1,459 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+
+    background: #f1f3f6;
+
+    min-height: 100vh;
+
+    padding: 60px 20px;
+
+    color: #222;
+}
+
+
+/* =====================================
+   CONTAINER
+===================================== */
+
+.register-container {
+    width: 100%;
+    max-width: 835px;
+
+    margin: 0 auto;
+
+    background: #ffffff;
+
+    border-radius: 30px;
+
+    padding: 42px 48px 32px;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.03);
+}
+
+
+/* =====================================
+   TITLE
+===================================== */
+
+.register-title h1 {
+    color: #2f568c;
+
+    font-size: 23px;
+
+    font-weight: 700;
+
+    margin-bottom: 16px;
+}
+
+.title-line {
+    width: 100%;
+
+    height: 2px;
+
+    background: #2f568c;
+
+    margin-bottom: 16px;
+}
+
+.register-title p {
+    color: #666;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 20px;
+}
+
+
+/* =====================================
+   STEPS
+===================================== */
+
+.steps {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    margin: 0 auto 30px;
+
+    max-width: 450px;
+}
+
+.step {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+}
+
+.step span {
+    width: 32px;
+    height: 32px;
+
+    border-radius: 50%;
+
+    background: #e4ebf3;
+
+    color: #53677e;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+
+    font-size: 14px;
+}
+
+.step.active span,
+.step.completed span {
+    background: #2f568c;
+
+    color: #ffffff;
+}
+
+.step.active strong,
+.step.completed strong {
+    color: #2f568c;
+}
+
+.step-line {
+    width: 48px;
+
+    height: 1px;
+
+    background: #dfe5eb;
+
+    margin: 0 14px;
+}
+
+
+/* =====================================
+   ERROR
+===================================== */
+
+.error-box {
+    background: #fff1f1;
+
+    border: 1px solid #f3b7b7;
+
+    color: #b42318;
+
+    border-radius: 8px;
+
+    padding: 12px 15px;
+
+    margin-bottom: 20px;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* =====================================
+   FORM STEP
+===================================== */
+
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+}
+
+
+/* =====================================
+   FORM ROW
+===================================== */
+
+.form-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 36px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group.full {
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #202020;
+
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+
+    border: 1px solid #d5d5d5;
+
+    border-radius: 5px;
+
+    padding: 12px 13px;
+
+    font-size: 14px;
+
+    font-family: inherit;
+
+    outline: none;
+
+    background: #fff;
+
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.form-group input {
+    height: 43px;
+}
+
+.form-group textarea {
+    resize: vertical;
+
+    min-height: 80px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #2f568c;
+
+    box-shadow:
+        0 0 0 2px rgba(47, 86, 140, 0.08);
+}
+
+
+/* =====================================
+   ERROR INPUT
+===================================== */
+
+.form-group input.input-error,
+.form-group textarea.input-error {
+    border-color: #d92d20;
+}
+
+.field-error {
+    display: block;
+
+    min-height: 16px;
+
+    color: #d92d20;
+
+    font-size: 11px;
+
+    margin-top: 4px;
+}
+
+
+/* =====================================
+   BUTTON ROW
+===================================== */
+
+.button-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 36px;
+
+    margin-top: 40px;
+}
+
+.next-row {
+    margin-top: 4px;
+}
+
+
+/* =====================================
+   PRIMARY BUTTON
+===================================== */
+
+.btn-primary {
+    border: none;
+
+    background: #2f568c;
+
+    color: white;
+
+    border-radius: 5px;
+
+    min-height: 39px;
+
+    padding: 0 18px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    background: #244774;
+}
+
+.btn-primary span {
+    font-size: 24px;
+
+    line-height: 0;
+}
+
+
+/* =====================================
+   BACK BUTTON
+===================================== */
+
+.btn-back {
+    border: none;
+
+    background: #d9d9d9;
+
+    color: #333;
+
+    border-radius: 5px;
+
+    min-width: 108px;
+
+    min-height: 39px;
+
+    padding: 0 15px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-back:hover {
+    background: #c9c9c9;
+}
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 20px 12px;
+    }
+
+    .register-container {
+        padding: 30px 22px;
+
+        border-radius: 20px;
+    }
+
+    .register-title h1 {
+        font-size: 19px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+    .steps {
+        justify-content: flex-start;
+    }
+
+    .step {
+        font-size: 11px;
+    }
+
+    .step-line {
+        width: 25px;
+
+        margin: 0 8px;
+    }
+
+    .button-row {
+        gap: 15px;
+    }
+
+}
+
+.form-group select {
+    width: 100%;
+
+    height: 43px;
+
+    border: 1px solid #d5d5d5;
+
+    border-radius: 5px;
+
+    padding: 0 13px;
+
+    font-size: 14px;
+
+    font-family: inherit;
+
+    outline: none;
+
+    background: #fff;
+
+    color: #222;
+
+    cursor: pointer;
+
+    transition:
+        border 0.2s,
+        box-shadow 0.2s;
+}
+
+.form-group select:focus {
+    border-color: #2f568c;
+
+    box-shadow:
+        0 0 0 2px rgba(47, 86, 140, 0.08);
+}
+
+.form-group select.input-error {
+    border-color: #d92d20;
+}

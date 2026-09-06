@@ -412,20 +412,6 @@
                     <?= htmlspecialchars($fullName) ?>
                 </div>
 
-
-                <a href="../member/profile.php">
-
-                    <span class="menu-icon">
-                        👤
-                    </span>
-
-                    <span>
-                        Xem hồ sơ
-                    </span>
-
-                </a>
-
-
                 <a href="../logout.php">
 
                     <span class="menu-icon">

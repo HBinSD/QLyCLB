@@ -1,0 +1,690 @@
+.member-detail-page {
+    padding: 28px 32px;
+
+    background: #f5f7fa;
+
+    min-height: calc(100vh - 70px);
+}
+
+
+/* =================================
+   HEADER
+================================= */
+
+.page-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: flex-end;
+
+    margin-bottom: 20px;
+}
+
+.breadcrumb {
+    font-size: 13px;
+
+    margin-bottom: 10px;
+
+    color: #94a3b8;
+}
+
+.breadcrumb a {
+    color: #2f568c;
+
+    text-decoration: none;
+
+    font-weight: 600;
+}
+
+.page-header h1 {
+    margin: 0 0 6px;
+
+    color: #1e3a5f;
+
+    font-size: 28px;
+}
+
+.page-header p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+.btn-back {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    height: 40px;
+
+    padding: 0 17px;
+
+    border-radius: 7px;
+
+    background: white;
+
+    border: 1px solid #dce2e8;
+
+    color: #475569;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.btn-back:hover {
+    background: #f8fafc;
+}
+
+
+/* =================================
+   STATUS BANNER
+================================= */
+
+.status-banner {
+    background: white;
+
+    border-radius: 11px;
+
+    padding: 16px 20px;
+
+    margin-bottom: 22px;
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.status-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.status-label {
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+.status {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.status-pending {
+    background: #fff7e6;
+    color: #b77900;
+}
+
+.status-approved {
+    background: #eaf8ef;
+    color: #238636;
+}
+
+.status-rejected {
+    background: #fff0f0;
+    color: #d93025;
+}
+
+.application-date {
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.application-date strong {
+    color: #334155;
+}
+
+
+/* =================================
+   GRID
+================================= */
+
+.detail-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        310px;
+
+    gap: 22px;
+
+    align-items: start;
+}
+
+.left-column,
+.right-column {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+/* =================================
+   CARD
+================================= */
+
+.detail-card {
+    background: white;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.05);
+
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 20px 22px;
+
+    border-bottom: 1px solid #edf0f3;
+}
+
+.card-header h2 {
+    margin: 0 0 5px;
+
+    color: #1e3a5f;
+
+    font-size: 18px;
+}
+
+.card-header p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* =================================
+   PROFILE
+================================= */
+
+.profile-section {
+    padding: 22px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    border-bottom: 1px solid #edf0f3;
+}
+
+.profile-avatar {
+    width: 68px;
+    height: 68px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    background: #2f568c;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 26px;
+
+    font-weight: 700;
+
+    flex-shrink: 0;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.profile-name h3 {
+    margin: 0 0 6px;
+
+    color: #1e293b;
+
+    font-size: 19px;
+}
+
+.profile-name span {
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* =================================
+   INFO GRID
+================================= */
+
+.info-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 0;
+}
+
+.info-item {
+    padding: 17px 22px;
+
+    border-bottom: 1px solid #edf0f3;
+}
+
+.info-item:nth-child(odd) {
+    border-right: 1px solid #edf0f3;
+}
+
+.info-label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+.info-item strong {
+    color: #334155;
+
+    font-size: 14px;
+
+    word-break: break-word;
+}
+
+
+/* =================================
+   APPLICATION CONTENT
+================================= */
+
+.application-content {
+    padding: 22px;
+}
+
+.content-item {
+    margin-bottom: 22px;
+}
+
+.content-item:last-child {
+    margin-bottom: 0;
+}
+
+.content-item label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #334155;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.content-box {
+    background: #f8fafc;
+
+    border: 1px solid #edf0f3;
+
+    border-radius: 8px;
+
+    padding: 13px 15px;
+
+    color: #475569;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+
+    min-height: 25px;
+}
+
+
+/* =================================
+   BAND
+================================= */
+
+.band-box {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 9px 13px;
+
+    background: #eef4fb;
+
+    color: #2f568c;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+}
+
+.band-code {
+    font-weight: 700;
+}
+
+
+/* =================================
+   SUMMARY
+================================= */
+
+.summary-card {
+    padding: 22px;
+}
+
+.summary-card h2 {
+    margin: 0 0 18px;
+
+    color: #1e3a5f;
+
+    font-size: 18px;
+}
+
+.summary-item {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid #edf0f3;
+
+    font-size: 13px;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+
+    padding-bottom: 0;
+}
+
+.summary-item span {
+    color: #64748b;
+}
+
+.summary-item strong {
+    color: #334155;
+
+    text-align: right;
+
+    word-break: break-word;
+}
+
+
+/* =================================
+   ACTION CARD
+================================= */
+
+.action-card {
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.action-card h2 {
+    margin: 0 0 8px;
+
+    color: #1e3a5f;
+
+    font-size: 18px;
+}
+
+.action-card > p {
+    margin: 0 0 18px;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+.action-card form {
+    margin: 0 0 9px;
+}
+
+
+/* =================================
+   BUTTONS
+================================= */
+
+.btn-approve,
+.btn-reject {
+    width: 100%;
+
+    min-height: 42px;
+
+    border-radius: 7px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.btn-approve {
+    border: none;
+
+    background: #2e7d32;
+
+    color: white;
+}
+
+.btn-approve:hover {
+    background: #256b29;
+}
+
+.btn-reject {
+    border: 1px solid #dc3545;
+
+    background: white;
+
+    color: #dc3545;
+}
+
+.btn-reject:hover {
+    background: #fff1f2;
+}
+
+
+/* =================================
+   REVIEW
+================================= */
+
+.text-approved {
+    color: #238636;
+}
+
+.text-rejected {
+    color: #d93025;
+}
+
+.reject-reason {
+    margin: 20px 22px 22px;
+
+    padding: 15px;
+
+    border-radius: 8px;
+
+    background: #fff5f5;
+
+    border: 1px solid #f3d0d0;
+}
+
+.reject-reason span {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #b42318;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.reject-reason p {
+    margin: 0;
+
+    color: #7f1d1d;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* =================================
+   RESULT CARDS
+================================= */
+
+.approved-card {
+    text-align: center;
+
+    border-top: 4px solid #2e7d32;
+}
+
+.rejected-card {
+    text-align: center;
+
+    border-top: 4px solid #dc3545;
+}
+
+.action-icon {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 50%;
+
+    margin: 0 auto 14px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 23px;
+
+    font-weight: bold;
+}
+
+.approved-card .action-icon {
+    background: #eaf8ef;
+
+    color: #238636;
+}
+
+.rejected-card .action-icon {
+    background: #fff0f0;
+
+    color: #d93025;
+}
+
+
+/* =================================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 1000px) {
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .right-column {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .member-detail-page {
+        padding: 20px 15px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .status-banner {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-item:nth-child(odd) {
+        border-right: none;
+    }
+
+    .right-column {
+        display: flex;
+    }
+
+}
