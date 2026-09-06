@@ -4,121 +4,237 @@ session_start();
 require_once "../includes/auth.php";
 require_once "../database/database.php";
 
-$user = $_SESSION['user'] ?? [];
-
-if (empty($user['username'])) {
+if (!isset($_SESSION['user'])) {
     header("Location: ../login.php");
     exit;
 }
 
-$username = $user['username'];
+$user = $_SESSION['user'];
 
 $database = new Database();
 $db = $database->getConnection();
 
-// Lấy thông tin câu lạc bộ sinh viên đang tham gia cùng thông tin người quản lý/chủ nhiệm
-$sql = "
-    SELECT c.*, ui.fullname AS owner_name, ui.email AS owner_email, ui.phone AS owner_phone
-    FROM ClubMember AS cm
-    JOIN clubs AS c ON c.club_id = cm.club_id
-    LEFT JOIN UserInfo AS ui ON ui.username = c.owner_id
-    WHERE cm.username = :username AND cm.status = 1
-";
-$stmt = $db->prepare($sql);
-$stmt->execute([':username' => $username]);
-$clubs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$username = $user['username'];
 
-$pageTitle = "Liên hệ Câu lạc bộ";
+$messageSuccess = "";
+$messageError = "";
+
+/*
+|--------------------------------------------------------------------------
+| Các loại nội dung liên hệ
+|--------------------------------------------------------------------------
+*/
+
+$contactTypes = [
+    'Tài khoản & mật khẩu',
+    'Vấn đề đăng ký',
+    'Đổi ban',
+    'Sự kiện & hoạt động',
+    'Thông tin cá nhân',
+    'Đề xuất / góp ý',
+    'Vấn đề khác'
+];
+
+/*
+|--------------------------------------------------------------------------
+| Xử lý gửi Contact
+|--------------------------------------------------------------------------
+*/
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $subject = trim($_POST['subject'] ?? '');
+    $message = trim($_POST['message'] ?? '');
+
+    /*
+    | Kiểm tra loại liên hệ
+    */
+    if ($subject === '') {
+
+        $messageError = "Vui lòng chọn nội dung liên hệ.";
+
+    } elseif (!in_array($subject, $contactTypes, true)) {
+
+        $messageError = "Nội dung liên hệ không hợp lệ.";
+
+    } elseif ($message === '') {
+
+        $messageError = "Vui lòng nhập nội dung chi tiết.";
+
+    } else {
+
+        try {
+
+            $sql = "
+                INSERT INTO Contact (
+                    username,
+                    subject,
+                    message,
+                    status,
+                    created_at
+                )
+                VALUES (
+                    :username,
+                    :subject,
+                    :message,
+                    'unread',
+                    NOW()
+                )
+            ";
+
+            $stmt = $db->prepare($sql);
+
+            $stmt->execute([
+                ':username' => $username,
+                ':subject'  => $subject,
+                ':message'  => $message
+            ]);
+
+            $messageSuccess = "Gửi liên hệ thành công.";
+
+            // Xóa dữ liệu form sau khi gửi thành công
+            $_POST = [];
+
+        } catch (PDOException $e) {
+
+            $messageError = "Không thể gửi liên hệ. Vui lòng thử lại.";
+        }
+    }
+}
+
+$pageTitle = "Liên hệ";
 $activeMenu = "contact.php";
 
 require_once "../includes/headers.php";
 ?>
 
-<link rel="stylesheet" href="css/club.css">
-<link rel="stylesheet" href="css/register_event.css">
+<div class="contact-container">
 
-<div class="club-layout">
+    <div class="contact-header">
 
-    <aside class="club-sidebar">
-        <div class="club-sidebar-title">
-            <span>☰</span>
-            <span>QUẢN LÝ CLB</span>
+        <h1>Liên hệ với CLB</h1>
+
+        <p>
+            Bạn có thắc mắc hoặc cần hỗ trợ?
+            Hãy chọn nội dung liên hệ và gửi thông tin cho ban quản lý.
+        </p>
+
+    </div>
+
+
+    <?php if ($messageSuccess !== ""): ?>
+
+        <div class="alert alert-success">
+            ✓ <?= htmlspecialchars($messageSuccess) ?>
         </div>
 
-        <nav class="club-menu">
-            <a href="club.php" class="club-menu-item">
-                <span class="menu-icon">🏠</span>
-                <span>Giới thiệu CLB</span>
-            </a>
+    <?php endif; ?>
 
-            <a href="club_member.php" class="club-menu-item">
-                <span class="menu-icon">👥</span>
-                <span>Danh sách thành viên</span>
-            </a>
 
-            <a href="events.php" class="club-menu-item">
-                <span class="menu-icon">📅</span>
-                <span>Sự kiện</span>
-            </a>
+    <?php if ($messageError !== ""): ?>
 
-            <a href="registered_events.php" class="club-menu-item">
-                <span class="menu-icon">✓</span>
-                <span>Các sự kiện đã đăng ký</span>
-            </a>
+        <div class="alert alert-error">
+            ⚠ <?= htmlspecialchars($messageError) ?>
+        </div>
 
-            <a href="notifications.php" class="club-menu-item">
-                <span class="menu-icon">🔔</span>
-                <span>Thông báo CLB</span>
-            </a>
+    <?php endif; ?>
 
-            <a href="contact.php" class="club-menu-item active">
-                <span class="menu-icon">📞</span>
-                <span>Liên hệ & Hỗ trợ</span>
-            </a>
-        </nav>
-    </aside>
 
-    <!-- CONTENT -->
-    <main class="club-content">
-        <div class="register-card" style="max-width: 100%;">
-            <h1>Liên hệ & Hỗ trợ Câu lạc bộ</h1>
-            <p>Nếu bạn có thắc mắc, cần giải đáp hoặc hỗ trợ về hoạt động câu lạc bộ, vui lòng xem thông tin chi tiết và liên hệ qua các kênh dưới đây:</p>
+    <div class="contact-card">
 
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+        <form method="POST">
 
-            <?php if (empty($clubs)): ?>
-                <div style="background: #f8f9fa; color: #6c757d; text-align: center; padding: 40px; border-radius: 6px;">
-                    📭 Bạn hiện chưa tham gia câu lạc bộ nào.
-                </div>
-            <?php else: ?>
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <?php foreach ($clubs as $club): ?>
-                        <div style="background: #fff; border: 1px solid #e0e0e0; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                            <h2 style="margin-top: 0; color: #007bff; font-size: 20px;">
-                                <?= htmlspecialchars($club['club_name']) ?>
-                            </h2>
-                            
-                            <p style="color: #555; line-height: 1.6; margin-bottom: 15px;">
-                                <strong>Giới thiệu:</strong> <?= nl2br(htmlspecialchars($club['description'])) ?>
-                            </p>
 
-                            <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
-                                <strong>Quy định CLB:</strong> <?= nl2br(htmlspecialchars($club['rule'])) ?>
-                            </p>
+            <!-- Username -->
 
-                            <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid #28a745;">
-                                <h4 style="margin: 0 0 10px 0; color: #333;">Thông tin người phụ trách / Chủ nhiệm:</h4>
-                                <p style="margin: 5px 0;">👤 <strong>Họ tên:</strong> <?= htmlspecialchars($club['owner_name'] ?? 'Chưa cập nhật') ?></p>
-                                <p style="margin: 5px 0;">📧 <strong>Email:</strong> <?= htmlspecialchars($club['owner_email'] ?? 'Chưa cập nhật') ?></p>
-                                <p style="margin: 5px 0;">📞 <strong>Số điện thoại:</strong> <?= htmlspecialchars($club['owner_phone'] ?? 'Chưa cập nhật') ?></p>
-                            </div>
-                        </div>
+            <div class="form-group">
+
+                <label>
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    value="<?= htmlspecialchars($username) ?>"
+                    readonly
+                >
+
+            </div>
+
+
+            <!-- Loại liên hệ -->
+
+            <div class="form-group">
+
+                <label for="subject">
+                    Nội dung liên hệ <span>*</span>
+                </label>
+
+                <select
+                    id="subject"
+                    name="subject"
+                    required
+                >
+
+                    <option value="">
+                        -- Chọn nội dung liên hệ --
+                    </option>
+
+                    <?php foreach ($contactTypes as $type): ?>
+
+                        <option
+                            value="<?= htmlspecialchars($type) ?>"
+                            <?= (($_POST['subject'] ?? '') === $type) ? 'selected' : '' ?>
+                        >
+                            <?= htmlspecialchars($type) ?>
+                        </option>
+
                     <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-    </main>
+
+                </select>
+
+            </div>
+
+
+            <!-- Nội dung chi tiết -->
+
+            <div class="form-group">
+
+                <label for="message">
+                    Nội dung chi tiết <span>*</span>
+                </label>
+
+                <textarea
+                    id="message"
+                    name="message"
+                    rows="8"
+                    placeholder="Mô tả chi tiết vấn đề bạn đang gặp phải..."
+                    required
+                ><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
+
+            </div>
+
+
+            <!-- Button -->
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn-submit"
+                >
+                    📩 Gửi liên hệ
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 
-<?php require_once "../includes/footer.php"; ?>
+<link rel="stylesheet" href="css/contact.css">
+
+<?php require_once '../includes/footer.php' ?>
+
