@@ -24,9 +24,9 @@ if ($eventId <= 0) {
     exit;
 }
 
-
 $database = new Database();
 $db = $database->getConnection();
+
 
 /*
 |--------------------------------------------------------------------------
@@ -122,19 +122,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = trim($_POST['description'] ?? '');
     $status = $_POST['status'] ?? 'upcoming';
 
+    /*
+     * Lấy band_id dạng STRING
+     */
     $selectedBands = $_POST['bands'] ?? [];
 
     /*
-     * Chỉ nhận band_id dạng số
+     * Đảm bảo mỗi band_id là string và loại bỏ khoảng trắng
      */
-    // $selectedBands = array_map(
-    //     'intval',
-    //     $selectedBands
-    // );
+    $selectedBands = array_map(
+        function ($bandId) {
+            return trim((string)$bandId);
+        },
+        $selectedBands
+    );
 
-    // $selectedBands = array_unique(
-    //     $selectedBands
-    // );
+    /*
+     * Loại bỏ ID rỗng
+     */
+    $selectedBands = array_filter(
+        $selectedBands,
+        function ($bandId) {
+            return $bandId !== '';
+        }
+    );
+
+    /*
+     * Loại bỏ ID trùng nhau
+     */
+    $selectedBands = array_values(
+        array_unique($selectedBands)
+    );
 
 
     /*
@@ -208,12 +226,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /*
     |--------------------------------------------------------------------------
-    | Kiểm tra ban
+    | Kiểm tra band
     |--------------------------------------------------------------------------
     */
 
     if ($error === '' && !empty($selectedBands)) {
 
+        /*
+         * Tạo ?, ?, ? tương ứng với số lượng band
+         */
         $placeholders = implode(
             ',',
             array_fill(
@@ -230,6 +251,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               AND band_id IN ($placeholders)
         ";
 
+        /*
+         * band_id KHÔNG ép sang int
+         */
         $params = array_merge(
             [$clubId],
             $selectedBands
@@ -377,6 +401,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | Hoàn tất transaction
+            |--------------------------------------------------------------------------
+            */
+
             $db->commit();
 
 
@@ -412,14 +442,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $event['event_name'] = $_POST['event_name'] ?? $event['event_name'];
-    $event['event_date'] = $_POST['event_date'] ?? $event['event_date'];
-    $event['start_time'] = $_POST['start_time'] ?? $event['start_time'];
-    $event['end_time'] = $_POST['end_time'] ?? $event['end_time'];
-    $event['slots'] = $_POST['slots'] ?? $event['slots'];
-    $event['location'] = $_POST['location'] ?? $event['location'];
-    $event['description'] = $_POST['description'] ?? $event['description'];
-    $event['status'] = $_POST['status'] ?? $event['status'];
+    $event['event_name'] =
+        $_POST['event_name'] ?? $event['event_name'];
+
+    $event['event_date'] =
+        $_POST['event_date'] ?? $event['event_date'];
+
+    $event['start_time'] =
+        $_POST['start_time'] ?? $event['start_time'];
+
+    $event['end_time'] =
+        $_POST['end_time'] ?? $event['end_time'];
+
+    $event['slots'] =
+        $_POST['slots'] ?? $event['slots'];
+
+    $event['location'] =
+        $_POST['location'] ?? $event['location'];
+
+    $event['description'] =
+        $_POST['description'] ?? $event['description'];
+
+    $event['status'] =
+        $_POST['status'] ?? $event['status'];
 }
 
 
@@ -653,12 +698,14 @@ require_once "../includes/headers.php";
                         <input
                             type="checkbox"
                             name="bands[]"
-                            value="<?= (int)$band['band_id'] ?>"
+                            value="<?= htmlspecialchars(
+                                $band['band_id']
+                            ) ?>"
 
                             <?= in_array(
-                                (int)$band['band_id'],
+                                (string)$band['band_id'],
                                 array_map(
-                                    'intval',
+                                    'strval',
                                     $selectedBands
                                 ),
                                 true
@@ -769,3 +816,4 @@ require_once "../includes/headers.php";
 <?php require_once '../includes/footer.php' ?>
 
 </body>
+
