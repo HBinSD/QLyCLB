@@ -11,7 +11,6 @@
     session_start();
     require_once(dirname(__FILE__) . "/database/database.php");
 
-    // check nếu đã đăng nhập thì chuyển qua dashboard
     if (isset($_SESSION['user'])) {
 
         switch ($_SESSION['user']['role']) {

@@ -7,13 +7,13 @@ require_once "../database/database.php";
 // ===============================
 // KIỂM TRA QUYỀN ADMIN
 // ===============================
-$user = $_SESSION['user'] ?? null;
+$user = $_SESSION['user'];
 
 if (!$user || ($user['role'] ?? '') !== 'admin') {
     http_response_code(403);
     echo 'Bạn không có quyền truy cập';
+    exit;
 }
-
 // ===============================
 // KẾT NỐI DATABASE
 // ===============================
