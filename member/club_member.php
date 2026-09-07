@@ -258,7 +258,7 @@ require_once "../includes/headers.php";
 
 
             <!-- Thông báo -->
-            <a href="notifications.php" class="club-menu-item">
+            <a href="news.php" class="club-menu-item">
 
                 <span class="menu-icon">
                     🔔

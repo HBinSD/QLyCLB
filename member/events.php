@@ -1,25 +1,25 @@
 <?php
-    session_start();
+session_start();
 
-    require_once "../includes/auth.php";
-    require_once "../database/database.php";
+require_once "../includes/auth.php";
+require_once "../database/database.php";
 
-    $user = $_SESSION['user'] ?? [];
+$user = $_SESSION['user'] ?? [];
 
-    if (empty($user['username'])) {
+if (empty($user['username'])) {
     header("Location: ../login.php");
     exit;
-    }
+}
 
-    $pageTitle  = "Sự kiện";
-    $activeMenu = "club.php";
+$pageTitle  = "Sự kiện";
+$activeMenu = "club.php";
 
-    $database = new Database();
-    $db       = $database->getConnection();
+$database = new Database();
+$db       = $database->getConnection();
 
-    $keyword = trim($_GET['keyword'] ?? '');
+$keyword = trim($_GET['keyword'] ?? '');
 
-    $sql = "
+$sql = "
     SELECT
         e.event_id,
         e.club_id,
@@ -48,11 +48,11 @@
     WHERE e.club_id = :club_id
 ";
 
-    $params = [
+$params = [
     ':club_id' => 'CLB001',
-    ];
+];
 
-    if ($keyword !== '') {
+if ($keyword !== '') {
     $sql .= "
         AND (
             e.event_name LIKE :keyword
@@ -62,9 +62,9 @@
     ";
 
     $params[':keyword'] = '%' . $keyword . '%';
-    }
+}
 
-    $sql .= "
+$sql .= "
     GROUP BY
         e.event_id,
         e.club_id,
@@ -78,15 +78,15 @@
         e.organizer_id,
         e.status
 
-    ORDER BY e.event_date ASC, e.start_time ASC
+    ORDER BY e.event_date DESC, e.start_time DESC
 ";
 
-    $stmt  = $db->prepare($sql);
-    $stmt->execute($params);
+$stmt  = $db->prepare($sql);
+$stmt->execute($params);
 
-    $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    require_once "../includes/headers.php";
+require_once "../includes/headers.php";
 ?>
 
 <link rel="stylesheet" href="css/event.css">
@@ -129,7 +129,7 @@
             </a>
 
             <!-- Thông báo -->
-            <a href="notifications.php" class="club-menu-item">
+            <a href="news.php" class="club-menu-item">
                 <span class="menu-icon">🔔</span>
                 <span>Thông báo CLB</span>
             </a>
@@ -182,22 +182,31 @@
                 <?php foreach ($events as $event): ?>
 
                     <?php
-                        $approved = (int) $event['approved_count'];
-                        $slots    = (int) $event['slots'];
-
+                        $approved  = (int) $event['approved_count'];
+                        $slots     = (int) $event['slots'];
                         $remaining = max(0, $slots - $approved);
+
+                        // --- KIỂM TRA QUÁ HẠN ---
+                        // Lấy mốc thời gian kết thúc sự kiện (hoặc cuối ngày nếu không có end_time)
+                        $endTimeStr = !empty($event['end_time']) ? $event['end_time'] : '23:59:59';
+                        $eventTimestamp = strtotime($event['event_date'] . ' ' . $endTimeStr);
+
+                        // Sự kiện quá hạn khi: status trong DB là expired/completed HOẶC thời gian sự kiện đã trôi qua
+                        $isExpired = ($event['status'] === 'expired' || 
+                                      $event['status'] === 'completed' || 
+                                      $eventTimestamp < time());
                     ?>
 
-                    <div class="event-card">
+                    <div class="event-card <?php echo $isExpired ? 'is-expired' : '' ?>">
 
                         <div class="event-date">
 
                             <strong>
-                                <?php echo date( 'd', strtotime($event['event_date']) ) ?>
+                                <?php echo date('d', strtotime($event['event_date'])) ?>
                             </strong>
 
                             <span>
-                                <?php echo date( 'm/Y', strtotime($event['event_date']) ) ?>
+                                <?php echo date('m/Y', strtotime($event['event_date'])) ?>
                             </span>
 
                         </div>
@@ -206,19 +215,19 @@
                         <div class="event-info">
 
                             <h2>
-                                <?php echo htmlspecialchars( $event['event_name'] ) ?>
+                                <?php echo htmlspecialchars($event['event_name']) ?>
                             </h2>
 
                             <p>
                                 🕐
-                                <?php echo date( 'H:i', strtotime($event['start_time']) ) ?>
+                                <?php echo date('H:i', strtotime($event['start_time'])) ?>
                                 -
-                                <?php echo date( 'H:i', strtotime($event['end_time']) ) ?>
+                                <?php echo date('H:i', strtotime($event['end_time'])) ?>
                             </p>
 
                             <p>
                                 📍
-                                <?php echo htmlspecialchars( $event['location'] ) ?>
+                                <?php echo htmlspecialchars($event['location']) ?>
                             </p>
 
                             <p> 👥 Còn <strong> <?php echo $remaining ?> </strong> / <?php echo $slots ?> chỗ </p>
@@ -228,27 +237,47 @@
 
                         <div class="event-action">
 
-                            <?php if ($remaining <= 0): ?>
+                            <?php if ($isExpired): ?>
 
+                                <!-- Trạng thái: Đã quá hạn -->
+                                <span class="event-expired">
+                                    Đã quá hạn
+                                </span>
+
+                                <!-- Vô hiệu hóa nút xem chi tiết -->
+                                <button type="button" class="btn-detail btn-disabled" disabled>
+                                    Đã hết hạn
+                                </button>
+
+                            <?php elseif ($remaining <= 0): ?>
+
+                                <!-- Trạng thái: Đã đủ chỗ -->
                                 <span class="event-full">
                                     Đã đủ chỗ
                                 </span>
 
+                                <a
+                                    href="event_detail.php?id=<?php echo (int)$event['event_id'] ?>"
+                                    class="btn-detail"
+                                >
+                                    Xem chi tiết
+                                </a>
+
                             <?php else: ?>
 
+                                <!-- Trạng thái: Còn chỗ -->
                                 <span class="event-open">
                                     Còn chỗ
                                 </span>
 
+                                <a
+                                    href="event_detail.php?id=<?php echo (int)$event['event_id'] ?>"
+                                    class="btn-detail"
+                                >
+                                    Xem chi tiết
+                                </a>
+
                             <?php endif; ?>
-
-
-                            <a
-                                href="event_detail.php?id=<?php echo (int)$event['event_id'] ?>"
-                                class="btn-detail"
-                            >
-                                Xem chi tiết
-                            </a>
 
                         </div>
 
