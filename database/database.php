@@ -3,7 +3,7 @@
 class Database
 {
     private $host = "localhost";
-    private $db_name = "qlyCLB";
+    private $db_name = "database";
     private $username = "root";
     private $password = "";
 
