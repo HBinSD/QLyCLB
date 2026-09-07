@@ -138,6 +138,7 @@ Truyền thông & Phản hồi: Gửi/nhận thông báo câu lạc bộ, form l
 ├── register.php              # Form đăng ký tài khoản (2 bước)
 ├── register_success.php      # Trang thông báo đăng ký thành công
 └── README.md                 # Tài liệu hướng dẫn dự án
+```
 
 ## 8. Test checklist
 Đăng ký & Đăng nhập:
