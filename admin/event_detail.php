@@ -7,7 +7,6 @@ require_once "../database/database.php";
 $user = $_SESSION['user'] ?? [];
 
 if (
-    ($user['role'] ?? '') !== 'organizer' &&
     ($user['role'] ?? '') !== 'admin'
 ) {
     http_response_code(403);

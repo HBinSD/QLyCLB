@@ -12,7 +12,8 @@ if (!isset($_SESSION['user'])) {
 $user = $_SESSION['user'];
 
 if (($user['role'] ?? '') !== 'admin') {
-    header("Location: ../index.php");
+    http_response_code(403);
+    echo 'Bạn không có quyền truy cập';
     exit;
 }
 

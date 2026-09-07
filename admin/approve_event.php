@@ -8,7 +8,8 @@ require_once "../database/database.php";
 $user = $_SESSION['user'] ?? [];
 
 if (empty($user['username'])) {
-    header("Location: ../login.php");
+    http_response_code(403);
+    echo 'Bạn không có quyền truy cập';
     exit;
 }
 

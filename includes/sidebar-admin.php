@@ -15,6 +15,10 @@
     <span class="sidebar-text">Quản lý câu lạc bộ</span>
 </a>
 
+<a href="events.php" class="sidebar-item<?= sidebar_active('events.php') ?>">
+    <span class="sidebar-text">Quản lý sự kiện</span>
+</a>
+
 <a href="notification.php" class="sidebar-item<?= sidebar_active('notification.php') ?>">
     <span class="sidebar-text">Thông báo</span>
 </a>

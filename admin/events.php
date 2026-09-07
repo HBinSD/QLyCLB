@@ -6,7 +6,7 @@ require_once "../database/database.php";
 
 $user = $_SESSION['user'] ?? [];
 
-if (($user['role'] ?? '') !== 'organizer' && ($user['role'] ?? '') !== 'admin') {
+if (($user['role'] ?? '') !== 'admin') {
         http_response_code(403);
         echo'Bạn không có quyền truy cập';
     exit;

@@ -93,18 +93,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     /*
-     * Chuyển band_id về integer
-     */
+    |--------------------------------------------------------------------------
+    | Xử lý band_id dạng STRING
+    |--------------------------------------------------------------------------
+    */
+
     $selectedBands = array_map(
-        'intval',
+        function ($bandId) {
+            return trim((string)$bandId);
+        },
         $selectedBands
     );
 
     /*
-     * Loại bỏ ID trùng
-     */
-    $selectedBands = array_unique(
-        $selectedBands
+    |--------------------------------------------------------------------------
+    | Loại bỏ ID rỗng
+    |--------------------------------------------------------------------------
+    */
+
+    $selectedBands = array_filter(
+        $selectedBands,
+        function ($bandId) {
+            return $bandId !== '';
+        }
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Loại bỏ ID trùng
+    |--------------------------------------------------------------------------
+    */
+
+    $selectedBands = array_values(
+        array_unique($selectedBands)
     );
 
 
