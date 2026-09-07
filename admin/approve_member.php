@@ -322,6 +322,105 @@ try {
 }
 
 
+// ===============================
+// 1. Insert thành viên CLB
+// ===============================
+
+$sql = "
+    SELECT id
+    FROM ClubMember
+    WHERE id LIKE 'CM%'
+    ORDER BY CAST(SUBSTRING(id, 3) AS UNSIGNED) DESC
+    LIMIT 1
+    FOR UPDATE
+";
+
+$stmt = $db->prepare($sql);
+$stmt->execute();
+
+$lastId = $stmt->fetchColumn();
+
+if ($lastId) {
+    $number = (int) substr($lastId, 2);
+    $number++;
+} else {
+    $number = 1;
+}
+
+$memberId = 'CM' . str_pad($number, 3, '0', STR_PAD_LEFT);
+
+
+
+// ===============================
+// Insert ban sinh viên đăng ký
+// ===============================
+
+if (!empty($application['desired_band'])) {
+
+    // Kiểm tra ban có thuộc CLB không
+    $sql = "
+        SELECT band_id
+        FROM ClubBand
+        WHERE band_id = :band_id
+          AND club_id = :club_id
+        LIMIT 1
+    ";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute([
+        ':band_id' => $application['desired_band'],
+        ':club_id' => $clubId
+    ]);
+
+    $bandId = $stmt->fetchColumn();
+
+    if (!$bandId) {
+        throw new Exception("Ban mà sinh viên đăng ký không tồn tại.");
+    }
+
+
+    // Kiểm tra sinh viên đã có ban chưa
+    $sql = "
+        SELECT COUNT(*)
+        FROM ClubBandMember
+        WHERE username = :username
+          AND club_id = :club_id
+    ";
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute([
+        ':username' => $username,
+        ':club_id'  => $clubId
+    ]);
+
+    $hasBand = (int)$stmt->fetchColumn();
+
+
+    // Chưa có thì insert ban
+    if ($hasBand === 0) {
+
+        $sql = "
+            INSERT INTO ClubBandMember (
+                username,
+                club_id,
+                band_id
+            )
+            VALUES (
+                :username,
+                :club_id,
+                :band_id
+            )
+        ";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute([
+            ':username' => $username,
+            ':club_id'  => $clubId,
+            ':band_id'  => $bandId
+        ]);
+    }
+}
+
 // =====================================================
 // RETURN
 // =====================================================
