@@ -747,38 +747,6 @@ require_once "../includes/headers.php";
             </a>
 
 
-            <a href="approved_events.php" class="quick-action">
-
-                <div class="quick-icon">
-                    ✅
-                </div>
-
-                <div>
-                    <strong>Đăng ký đã duyệt</strong>
-
-                    <span>
-                        <?= $approvedRegistrations ?> lượt đã duyệt
-                    </span>
-                </div>
-
-            </a>
-
-
-            <a href="club-members.php" class="quick-action">
-
-                <div class="quick-icon">
-                    👥
-                </div>
-
-                <div>
-                    <strong>Thành viên</strong>
-
-                    <span>
-                        <?= $totalMembers ?> thành viên
-                    </span>
-                </div>
-
-            </a>
 
         </div>
 
