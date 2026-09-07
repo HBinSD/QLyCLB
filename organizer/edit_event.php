@@ -127,14 +127,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     /*
      * Chỉ nhận band_id dạng số
      */
-    $selectedBands = array_map(
-        'intval',
-        $selectedBands
-    );
+    // $selectedBands = array_map(
+    //     'intval',
+    //     $selectedBands
+    // );
 
-    $selectedBands = array_unique(
-        $selectedBands
-    );
+    // $selectedBands = array_unique(
+    //     $selectedBands
+    // );
 
 
     /*

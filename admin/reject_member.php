@@ -305,7 +305,7 @@ require_once "../includes/headers.php";
 
 
                 <a
-                    href="accept_members.php"
+                    href="accept_member.php"
                     class="btn-back"
                 >
                     Quay lại
