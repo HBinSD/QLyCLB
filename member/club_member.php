@@ -79,7 +79,7 @@ if (!$userClub) {
                 <span>Các sự kiện đã đăng ký</span>
             </a>
 
-            <a href="notifications.php" class="club-menu-item">
+            <a href="news.php" class="club-menu-item">
                 <span class="menu-icon">🔔</span>
                 <span>Thông báo CLB</span>
             </a>
@@ -258,7 +258,7 @@ require_once "../includes/headers.php";
 
 
             <!-- Thông báo -->
-            <a href="notifications.php" class="club-menu-item">
+            <a href="news.php" class="club-menu-item">
 
                 <span class="menu-icon">
                     🔔

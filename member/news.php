@@ -6,7 +6,7 @@ require_once "../includes/auth.php";
 require_once "../database/database.php";
 
 $pageTitle  = "Thông báo CLB";
-$activeMenu = "notifications.php";
+$activeMenu = "news.php";
 
 /*
 |--------------------------------------------------------------------------

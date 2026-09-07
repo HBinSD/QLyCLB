@@ -1,35 +1,35 @@
 <?php
-    session_start();
+session_start();
 
-    require_once "../includes/auth.php";
-    require_once "../database/database.php";
+require_once "../includes/auth.php";
+require_once "../database/database.php";
 
-    $user = $_SESSION['user'] ?? [];
+$user = $_SESSION['user'] ?? [];
 
-    if (empty($user['username'])) {
+if (empty($user['username'])) {
     header("Location: ../login.php");
     exit;
-    }
+}
 
-    $username = $user['username'];
+$username = $user['username'];
 
-    $eventId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$eventId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-    if (! $eventId) {
+if (!$eventId) {
     header("Location: events.php");
     exit;
-    }
+}
 
-    $database = new Database();
-    $db       = $database->getConnection();
+$database = new Database();
+$db       = $database->getConnection();
 
-    /*
-    |--------------------------------------------------------------------------
-    | 1. Lấy thông tin sự kiện
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+| 1. Lấy thông tin sự kiện
+|--------------------------------------------------------------------------
+*/
 
-    $sql = "
+$sql = "
     SELECT
         e.event_id,
         e.club_id,
@@ -54,51 +54,84 @@
     LIMIT 1
 ";
 
-    $stmt = $db->prepare($sql);
-    $stmt->execute([
+$stmt = $db->prepare($sql);
+$stmt->execute([
     ':event_id' => $eventId,
-    ]);
+]);
 
-    $event = $stmt->fetch(PDO::FETCH_ASSOC);
+$event = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (! $event) {
+if (!$event) {
     header("Location: events.php");
     exit;
+}
+
+$clubId = $event['club_id'];
+
+/*
+|--------------------------------------------------------------------------
+| Xử lý Hủy đăng ký (CHỈ CHO PHÉP HỦY KHI TRẠNG THÁI LÀ 'pending')
+|--------------------------------------------------------------------------
+*/
+$alertMessage = "";
+$alertType = "";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'cancel_registration') {
+    // Chỉ cập nhật khi register_status = 'pending'
+    $cancelSql = "
+        UPDATE Register_event 
+        SET register_status = 'cancelled' 
+        WHERE username = :username 
+          AND event_id = :event_id 
+          AND register_status = 'pending'
+    ";
+
+    $stmtCancel = $db->prepare($cancelSql);
+    $stmtCancel->execute([
+        ':username' => $username,
+        ':event_id' => $eventId
+    ]);
+
+    if ($stmtCancel->rowCount() > 0) {
+        $alertMessage = "Hủy đăng ký sự kiện thành công!";
+        $alertType = "success";
+    } else {
+        $alertMessage = "Không thể hủy đăng ký. (Sự kiện đã được duyệt hoặc trạng thái không hợp lệ).";
+        $alertType = "danger";
     }
+}
 
-    $clubId = $event['club_id'];
+/*
+|--------------------------------------------------------------------------
+| 2. Đếm số người đã được duyệt
+|--------------------------------------------------------------------------
+*/
 
-    /*
-    |--------------------------------------------------------------------------
-    | 2. Đếm số người đã được duyệt
-    |--------------------------------------------------------------------------
-    */
-
-    $sql = "
+$sql = "
     SELECT COUNT(*) AS approved_count
     FROM Register_event
     WHERE event_id = :event_id
       AND register_status = 'approved'
 ";
 
-    $stmt = $db->prepare($sql);
-    $stmt->execute([
+$stmt = $db->prepare($sql);
+$stmt->execute([
     ':event_id' => $eventId,
-    ]);
+]);
 
-    $approvedCount = (int) $stmt->fetchColumn();
+$approvedCount = (int) $stmt->fetchColumn();
 
-    $slots = (int) $event['slots'];
+$slots = (int) $event['slots'];
 
-    $remainingSlots = max(0, $slots - $approvedCount);
+$remainingSlots = max(0, $slots - $approvedCount);
 
-    /*
+/*
 |--------------------------------------------------------------------------
 | 3. Lấy các ban được phép tham gia
 |--------------------------------------------------------------------------
 */
 
-    $sql = "
+$sql = "
     SELECT
         cb.band_id,
         cb.band_name
@@ -114,21 +147,21 @@
     ORDER BY cb.band_name ASC
 ";
 
-    $stmt = $db->prepare($sql);
-    $stmt->execute([
+$stmt = $db->prepare($sql);
+$stmt->execute([
     ':club_id'  => $clubId,
     ':event_id' => $eventId,
-    ]);
+]);
 
-    $requiredBands = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$requiredBands = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    /*
+/*
 |--------------------------------------------------------------------------
 | 4. Kiểm tra user có phải thành viên CLB không
 |--------------------------------------------------------------------------
 */
 
-    $sql = "
+$sql = "
     SELECT 1
     FROM ClubMember
     WHERE username = :username
@@ -137,21 +170,21 @@
     LIMIT 1
 ";
 
-    $stmt = $db->prepare($sql);
-    $stmt->execute([
+$stmt = $db->prepare($sql);
+$stmt->execute([
     ':username' => $username,
     ':club_id'  => $clubId,
-    ]);
+]);
 
-    $isClubMember = (bool) $stmt->fetchColumn();
+$isClubMember = (bool) $stmt->fetchColumn();
 
-    /*
-    |--------------------------------------------------------------------------
-    | 5. Kiểm tra user thuộc ban nào
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+| 5. Kiểm tra user thuộc ban nào
+|--------------------------------------------------------------------------
+*/
 
-    $sql = "
+$sql = "
     SELECT
         cbm.band_id,
         cb.band_name
@@ -163,50 +196,43 @@
       AND cbm.club_id = :club_id
 ";
 
-    $stmt = $db->prepare($sql);
+$stmt = $db->prepare($sql);
 
-    $stmt->execute([
+$stmt->execute([
     ':username' => $username,
     ':club_id'  => $clubId,
-    ]);
+]);
 
-    $userBands = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$userBands = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    /*
-    |--------------------------------------------------------------------------
-    | 6. Kiểm tra user có thuộc ban được yêu cầu không
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+| 6. Kiểm tra user có thuộc ban được yêu cầu không
+|--------------------------------------------------------------------------
+*/
 
-    $isAllowedBand = false;
-    if (empty($requiredBands)) {
-    /*
-     * Nếu Event không yêu cầu ban cụ thể
-     * thì mọi thành viên CLB đều có thể đăng ký.
-     */
+$isAllowedBand = false;
+if (empty($requiredBands)) {
     $isAllowedBand = true;
-
-    } else {
-
+} else {
     $requiredBandIds = array_column($requiredBands, 'band_id');
     $userBandIds     = array_column($userBands, 'band_id');
 
     foreach ($userBandIds as $bandId) {
-
         if (in_array($bandId, $requiredBandIds)) {
             $isAllowedBand = true;
             break;
         }
     }
-    }
+}
 
-    /*
-    |--------------------------------------------------------------------------
-    | 7. Kiểm tra user đã đăng ký chưa
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+| 7. Kiểm tra user đã đăng ký chưa
+|--------------------------------------------------------------------------
+*/
 
-    $sql = "
+$sql = "
     SELECT
         register_status,
         register_time,
@@ -217,79 +243,69 @@
     LIMIT 1
 ";
 
-    $stmt = $db->prepare($sql);
+$stmt = $db->prepare($sql);
 
-    $stmt->execute([
+$stmt->execute([
     ':username' => $username,
     ':event_id' => $eventId,
-    ]);
+]);
 
-    $registration = $stmt->fetch(PDO::FETCH_ASSOC);
+$registration = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    /*
-    |--------------------------------------------------------------------------
-    | 8. Xác định có thể đăng ký hay không
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+| 8. Xác định có thể đăng ký hay không
+|--------------------------------------------------------------------------
+*/
 
-    $canRegister     = true;
-    $registerMessage = '';
+$canRegister     = true;
+$registerMessage = '';
 
-    if (! $isClubMember) {
-
+if (!$isClubMember) {
     $canRegister = false;
-
     $registerMessage = 'Bạn chưa là thành viên của câu lạc bộ.';
-
-    } elseif ($event['status'] !== 'upcoming') {
-
+} elseif ($event['status'] !== 'upcoming') {
     $canRegister = false;
-
     $registerMessage = 'Sự kiện hiện không mở đăng ký.';
-
-    } elseif ($remainingSlots <= 0) {
-
+} elseif ($remainingSlots <= 0) {
     $canRegister = false;
-
     $registerMessage = 'Sự kiện đã đủ số lượng người tham gia.';
-
-    } elseif (! $isAllowedBand) {
-
+} elseif (!$isAllowedBand) {
     $canRegister = false;
-
     $registerMessage = 'Bạn không thuộc ban được yêu cầu cho sự kiện này.';
-
-    } elseif ($registration) {
-
-    $canRegister = false;
+} elseif ($registration) {
 
     switch ($registration['register_status']) {
-
         case 'pending':
+            $canRegister = false;
             $registerMessage = 'Bạn đã đăng ký và đang chờ organizer duyệt.';
             break;
 
         case 'approved':
+            $canRegister = false;
             $registerMessage = 'Bạn đã được duyệt tham gia sự kiện.';
             break;
 
         case 'rejected':
+            $canRegister = false;
             $registerMessage = 'Đăng ký của bạn đã bị từ chối.';
             break;
 
         case 'cancelled':
-            $registerMessage = 'Bạn đã hủy đăng ký sự kiện.';
+            // Đã hủy -> MỞ CHO PHÉP ĐĂNG KÝ LẠI
+            $canRegister = true;
             break;
 
         default:
+            $canRegister = false;
             $registerMessage = 'Bạn đã đăng ký sự kiện này.';
     }
-    }
+}
 
-    $pageTitle  = $event['event_name'];
-    $activeMenu = "events.php";
+$pageTitle  = $event['event_name'];
+$activeMenu = "events.php";
 
-    require_once "../includes/headers.php";
+require_once "../includes/headers.php";
 ?>
 
 <link rel="stylesheet" href="css/event_detail.css">
@@ -331,7 +347,7 @@
             </a>
 
             <!-- Thông báo -->
-            <a href="notifications.php" class="club-menu-item">
+            <a href="news.php" class="club-menu-item">
                 <span class="menu-icon">🔔</span>
                 <span>Thông báo CLB</span>
             </a>
@@ -384,7 +400,7 @@
                     </span>
 
                     <strong>
-                        <?php echo date( 'd/m/Y', strtotime($event['event_date']) ) ?>
+                        <?php echo date('d/m/Y', strtotime($event['event_date'])) ?>
                     </strong>
 
                 </div>
@@ -397,9 +413,9 @@
                     </span>
 
                     <strong>
-                        <?php echo date( 'H:i', strtotime($event['start_time']) ) ?>
+                        <?php echo date('H:i', strtotime($event['start_time'])) ?>
                         -
-                        <?php echo date( 'H:i', strtotime($event['end_time']) ) ?>
+                        <?php echo date('H:i', strtotime($event['end_time'])) ?>
                     </strong>
 
                 </div>
@@ -412,7 +428,7 @@
                     </span>
 
                     <strong>
-                        <?php echo htmlspecialchars( $event['location'] ?? 'Chưa cập nhật' ) ?>
+                        <?php echo htmlspecialchars($event['location'] ?? 'Chưa cập nhật') ?>
                     </strong>
 
                 </div>
@@ -425,7 +441,7 @@
                     </span>
 
                     <strong>
-                        <?php echo htmlspecialchars($event['organizer_name'] ?? $event['organizer_id'] ) ?>
+                        <?php echo htmlspecialchars($event['organizer_name'] ?? $event['organizer_id']) ?>
                     </strong>
 
                 </div>
@@ -455,9 +471,9 @@
                 <div class="slot-progress">
 
                     <?php
-                        $percent = $slots > 0
-                            ? min(100, ($approvedCount / $slots) * 100)
-                            : 100;
+                    $percent = $slots > 0
+                        ? min(100, ($approvedCount / $slots) * 100)
+                        : 100;
                     ?>
 
                     <div
@@ -486,7 +502,7 @@
                 </h2>
 
                 <p>
-                    <?php echo nl2br(htmlspecialchars( $event['description'] ?? 'Chưa có mô tả.' ) ) ?>
+                    <?php echo nl2br(htmlspecialchars($event['description'] ?? 'Chưa có mô tả.')) ?>
                 </p>
 
             </section>
@@ -514,11 +530,7 @@
                         <?php foreach ($requiredBands as $band): ?>
 
                             <span class="band-tag">
-
-                                <?php echo htmlspecialchars(
-    $band['band_name']
-) ?>
-
+                                <?php echo htmlspecialchars($band['band_name']) ?>
                             </span>
 
                         <?php endforeach; ?>
@@ -551,11 +563,7 @@
                         <?php foreach ($userBands as $band): ?>
 
                             <span class="user-band-tag">
-
-                                <?php echo htmlspecialchars(
-    $band['band_name']
-) ?>
-
+                                <?php echo htmlspecialchars($band['band_name']) ?>
                             </span>
 
                         <?php endforeach; ?>
@@ -567,33 +575,67 @@
             </section>
 
 
-            <!-- REGISTER -->
+            <!-- REGISTER & CANCEL AREA -->
 
             <div class="register-area">
 
+                <?php if (!empty($alertMessage)): ?>
+                    <div class="alert alert-<?= $alertType ?>">
+                        <?= htmlspecialchars($alertMessage) ?>
+                    </div>
+                <?php endif; ?>
+
                 <?php if ($canRegister): ?>
+
+                    <?php $isReRegister = ($registration && $registration['register_status'] === 'cancelled'); ?>
 
                     <a
                         href="register_event.php?id=<?php echo $eventId ?>"
                         class="btn-register"
                     >
-                        Đăng ký tham gia
+                        <?= $isReRegister ? '🔄 Đăng ký lại tham gia' : 'Đăng ký tham gia' ?>
                     </a>
+
+                    <?php if ($isReRegister): ?>
+                        <span style="font-size: 13px; color: #64748b;">
+                            (Bạn đã hủy đăng ký sự kiện này trước đó)
+                        </span>
+                    <?php endif; ?>
 
                 <?php else: ?>
 
                     <div class="register-message">
-                        <?php echo htmlspecialchars( $registerMessage ) ?>
+                        <?php echo htmlspecialchars($registerMessage) ?>
                     </div>
 
                     <?php if ($registration): ?>
 
-                        <a
-                            href="registered_events.php"
-                            class="btn-secondary"
-                        >
-                            Xem đăng ký của tôi
-                        </a>
+                        <div class="action-buttons">
+
+                            <!-- Chỉ cho phép hủy khi đang Chờ duyệt (pending) -->
+                            <?php if ($registration['register_status'] === 'pending'): ?>
+                                <form method="POST" action="" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đăng ký tham gia sự kiện này?');">
+                                    <input type="hidden" name="action" value="cancel_registration">
+                                    <button type="submit" class="btn-cancel">
+                                        Hủy đăng ký
+                                    </button>
+                                </form>
+
+                            <!-- Khi đã được Duyệt (approved) thì nhắc nhở liên hệ -->
+                            <?php elseif ($registration['register_status'] === 'approved'): ?>
+                                <div class="contact-note">
+                                    ℹ️ Đơn đăng ký đã được duyệt. Nếu muốn hủy tham gia, vui lòng liên hệ trực tiếp với Ban tổ chức hoặc Ban quản lý CLB.
+                                </div>
+                            <?php endif; ?>
+
+                            <a
+                                href="registered_events.php"
+                                class="btn-secondary"
+                            >
+                                Xem đăng ký của tôi
+                            </a>
+
+                        </div>
 
                     <?php endif; ?>
 
