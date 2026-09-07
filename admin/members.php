@@ -469,15 +469,6 @@ require_once "../includes/headers.php";
                                 <div class="action-buttons">
 
                                     <a
-                                        href="member_detail.php?username=<?= urldecode($member['username']) ?>"
-                                        class="btn-view"
-                                        title="Xem thông tin"
-                                    >
-                                        👁
-                                    </a>
-
-
-                                    <a
                                         href="member_edit.php?username=<?= urldecode($member['username']) ?>"
                                         class="btn-edit"
                                         title="Chỉnh sửa"
