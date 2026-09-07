@@ -550,19 +550,55 @@ require_once "../includes/headers.php";
 
                             <div class="event-status">
 
-                                <?php if ($event['status'] === 'ongoing'): ?>
+                                <?php
+                                // Ngày và giờ hiện tại
+                                $now = new DateTime();
 
-                                    <span class="status ongoing">
-                                        Đang diễn ra
-                                    </span>
+                                // Ngày + giờ bắt đầu sự kiện
+                                $eventStart = new DateTime(
+                                    $event['event_date'] . ' ' . $event['start_time']
+                                );
 
-                                <?php else: ?>
+                                // Ngày + giờ kết thúc sự kiện
+                                $eventEnd = new DateTime(
+                                    $event['event_date'] . ' ' . $event['end_time']
+                                );
 
-                                    <span class="status upcoming">
-                                        Sắp diễn ra
-                                    </span>
+                                /*
+                                |--------------------------------------------------------------------------
+                                | Xác định trạng thái thực tế
+                                |--------------------------------------------------------------------------
+                                */
 
-                                <?php endif; ?>
+                                if ($event['status'] === 'cancelled') {
+
+                                    // Nếu sự kiện bị hủy thì luôn hiển thị Đã hủy
+                                    $statusClass = 'cancelled';
+                                    $statusText = 'Đã hủy';
+
+                                } elseif ($now < $eventStart) {
+
+                                    // Chưa tới thời gian bắt đầu
+                                    $statusClass = 'upcoming';
+                                    $statusText = 'Sắp diễn ra';
+
+                                } elseif ($now >= $eventStart && $now <= $eventEnd) {
+
+                                    // Đang trong khoảng thời gian diễn ra
+                                    $statusClass = 'ongoing';
+                                    $statusText = 'Đang diễn ra';
+
+                                } else {
+
+                                    // Đã qua thời gian kết thúc
+                                    $statusClass = 'completed';
+                                    $statusText = 'Đã kết thúc';
+                                }
+                                ?>
+
+                                <span class="status <?= $statusClass ?>">
+                                    <?= $statusText ?>
+                                </span>
 
                             </div>
 
